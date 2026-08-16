@@ -1,24 +1,49 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DB Collection V2.5</title><link rel="stylesheet" href="style.css"></head>
-<body><header><b>★ DB Collection</b><span>Fusion World · V2.5</span></header><main>
-<section class="hero"><small>RÉIMPRESSIONS MULTI-SÉRIES</small><h1>Une référence peut changer de produit<br>sans changer de numéro.</h1><p>Le logiciel distingue désormais le code de carte de son produit d'origine : Starter Deck, Booster, Bonus Pack ou édition spéciale.</p></section>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DB Collection V2.6</title><link rel="stylesheet" href="style.css"></head>
+<body><header><b>★ DB Collection</b><span>Fusion World · V2.6</span></header><main>
+<section class="hero"><small>RECHERCHE ÉTENDUE</small><h1>Une carte précise<br>ou une série entière.</h1><p>Recherche par référence ou parcours complet d'une série, avec filtres par nom, rareté et version.</p></section>
 <section class="stats"><div><span>Valeur totale</span><b id="tv">0,00 €</b></div><div><span>Coût d'achat</span><b id="tc">0,00 €</b></div><div><span>Plus-value</span><b id="tg">0,00 €</b></div><div><span>Cartes</span><b id="tq">0</b></div></section>
 
-<section class="panel"><div class="head"><div><small>RECHERCHE</small><h2>Carte Fusion World</h2></div><span id="status">Prêt</span></div>
-<div class="search"><input id="ref" placeholder="Ex. FS01-15, FB01-001, FB01-139..."><button id="go">Rechercher</button></div>
-<p id="msg" class="msg hide"></p><div id="variants" class="variants"></div></section>
+<section class="panel">
+<div class="tabs"><button id="tabRef" class="tab active">Par référence</button><button id="tabSeries" class="tab">Par série</button></div>
+
+<div id="refMode">
+ <div class="head"><div><small>RECHERCHE</small><h2>Référence Fusion World</h2></div><span id="status">Prêt</span></div>
+ <div class="search"><input id="ref" placeholder="Ex. FS01-15, FB01-001..."><button id="go">Rechercher</button></div>
+</div>
+
+<div id="seriesMode" class="hide">
+ <div class="head"><div><small>CATALOGUE</small><h2>Parcourir une série</h2></div><span id="seriesCount">—</span></div>
+ <div class="series-controls">
+  <select id="seriesSelect">
+   <option value="">Choisir une série…</option>
+   <option value="FB01">FB01 - Awakened Pulse</option><option value="FB02">FB02 - Blazing Aura</option>
+   <option value="FB03">FB03 - Raging Roar</option><option value="FB04">FB04 - Ultra Limit</option>
+   <option value="FB05">FB05 - New Adventure</option><option value="FB06">FB06 - Rivals Clash</option>
+   <option value="FB07">FB07 - Wish for Shenron</option><option value="FB08">FB08 - Saiyan's Pride</option>
+   <option value="FB09">FB09 - Dual Evolution</option><option value="FB10">FB10 - Cross Force</option>
+   <option value="SB01">SB01 - Manga Booster 01</option><option value="SB02">SB02 - Manga Booster 02</option>
+   <option value="FS01">FS01 - Starter Deck Son Goku</option><option value="FS02">FS02 - Starter Deck Vegeta</option>
+   <option value="FS03">FS03 - Starter Deck Broly</option><option value="FS04">FS04 - Starter Deck Frieza</option>
+   <option value="FS05">FS05 - Starter Deck Bardock</option><option value="FS06">FS06 - Starter Deck Son Goku (Mini)</option>
+   <option value="FS07">FS07 - Starter Deck Vegeta (Mini)</option><option value="FS08">FS08 - Starter Deck Vegeta (Mini) SS3</option>
+   <option value="FS09">FS09 - Starter Deck EX Shallot</option><option value="FS10">FS10 - Starter Deck EX Giblet</option>
+   <option value="FS11">FS11 - Starter Deck EX The Phase of Evolution</option><option value="FS12">FS12 - Starter Deck EX The Beat of Ki</option>
+  </select>
+  <input id="seriesText" placeholder="Filtrer par nom ou référence">
+  <select id="rarityFilter"><option value="">Toutes raretés</option><option>L</option><option>C</option><option>UC</option><option>R</option><option>SR</option><option>SCR</option></select>
+  <select id="versionFilter"><option value="">Toutes versions</option><option value="standard">Standard</option><option value="parallel">Alt Art / Parallel</option></select>
+ </div>
+</div>
+
+<p id="msg" class="msg hide"></p><div id="variants" class="variants"></div>
+</section>
 
 <section class="panel"><div class="head"><div><small>SÉLECTION</small><h2>Ajouter à ma collection</h2></div></div>
 <form id="form"><input id="img" type="hidden"><div class="formgrid">
-<label>Nom<input id="name" required></label>
-<label>Référence exacte<input id="exact"></label>
-<label>Code d'origine<input id="baseCode"></label>
-<label>Produit / édition<input id="releaseSet"></label>
-<label>Série de la carte<input id="cardSet"></label>
-<label>Rareté<input id="rarity"></label>
-<label>Version<input id="version"></label>
-<label>État<select id="condition"><option>Near Mint</option><option>Excellent</option><option>Good</option><option>Light Played</option><option>Played</option></select></label>
-<label>Quantité<input id="qty" type="number" min="1" value="1"></label>
-<label>Prix d'achat (€)<input id="buy" type="number" min="0" step=".01" value="0"></label>
+<label>Nom<input id="name" required></label><label>Référence exacte<input id="exact"></label><label>Code d'origine<input id="baseCode"></label>
+<label>Produit / édition<input id="releaseSet"></label><label>Série de la carte<input id="cardSet"></label><label>Rareté<input id="rarity"></label>
+<label>Version<input id="version"></label><label>État<select id="condition"><option>Near Mint</option><option>Excellent</option><option>Good</option><option>Light Played</option><option>Played</option></select></label>
+<label>Quantité<input id="qty" type="number" min="1" value="1"></label><label>Prix d'achat (€)<input id="buy" type="number" min="0" step=".01" value="0"></label>
 <label>Valeur actuelle (€)<input id="market" type="number" min="0" step=".01" value="0"></label>
 </div><button>Ajouter</button></form></section>
 
