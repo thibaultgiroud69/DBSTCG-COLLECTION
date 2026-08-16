@@ -1,0 +1,26 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DB Collection V2.5</title><link rel="stylesheet" href="style.css"></head>
+<body><header><b>★ DB Collection</b><span>Fusion World · V2.5</span></header><main>
+<section class="hero"><small>RÉIMPRESSIONS MULTI-SÉRIES</small><h1>Une référence peut changer de produit<br>sans changer de numéro.</h1><p>Le logiciel distingue désormais le code de carte de son produit d'origine : Starter Deck, Booster, Bonus Pack ou édition spéciale.</p></section>
+<section class="stats"><div><span>Valeur totale</span><b id="tv">0,00 €</b></div><div><span>Coût d'achat</span><b id="tc">0,00 €</b></div><div><span>Plus-value</span><b id="tg">0,00 €</b></div><div><span>Cartes</span><b id="tq">0</b></div></section>
+
+<section class="panel"><div class="head"><div><small>RECHERCHE</small><h2>Carte Fusion World</h2></div><span id="status">Prêt</span></div>
+<div class="search"><input id="ref" placeholder="Ex. FS01-15, FB01-001, FB01-139..."><button id="go">Rechercher</button></div>
+<p id="msg" class="msg hide"></p><div id="variants" class="variants"></div></section>
+
+<section class="panel"><div class="head"><div><small>SÉLECTION</small><h2>Ajouter à ma collection</h2></div></div>
+<form id="form"><input id="img" type="hidden"><div class="formgrid">
+<label>Nom<input id="name" required></label>
+<label>Référence exacte<input id="exact"></label>
+<label>Code d'origine<input id="baseCode"></label>
+<label>Produit / édition<input id="releaseSet"></label>
+<label>Série de la carte<input id="cardSet"></label>
+<label>Rareté<input id="rarity"></label>
+<label>Version<input id="version"></label>
+<label>État<select id="condition"><option>Near Mint</option><option>Excellent</option><option>Good</option><option>Light Played</option><option>Played</option></select></label>
+<label>Quantité<input id="qty" type="number" min="1" value="1"></label>
+<label>Prix d'achat (€)<input id="buy" type="number" min="0" step=".01" value="0"></label>
+<label>Valeur actuelle (€)<input id="market" type="number" min="0" step=".01" value="0"></label>
+</div><button>Ajouter</button></form></section>
+
+<section class="panel"><div class="head"><div><small>INVENTAIRE</small><h2>Ma collection</h2></div><input id="filter" placeholder="Rechercher"></div><div id="collection" class="collection"></div><p id="empty">Aucune carte.</p></section>
+</main><script src="app.js"></script></body></html>
