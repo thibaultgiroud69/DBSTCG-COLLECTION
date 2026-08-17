@@ -149,9 +149,76 @@
 }
 .web-exp-banner b{color:#ffc928}
 </style>
+
+<style>
+.cloud-panel{margin-top:16px}
+.cloud-help{color:#96a3b5;font-size:.8rem;line-height:1.5}
+.cloud-config,.cloud-auth{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin:12px 0}
+.cloud-auth{grid-template-columns:1fr 1fr}
+.cloud-auth-actions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
+.cloud-sync-actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.cloud-status{padding:10px 12px;border:1px solid #35465c;border-radius:10px;background:#0d141e;color:#9fc8ff;font-size:.76rem;white-space:pre-line}
+.cloud-config label,.cloud-auth label{font-size:.72rem;color:#96a3b5}
+.cloud-config input,.cloud-auth input{margin-top:5px}
+@media(max-width:800px){
+  .cloud-config,.cloud-auth{grid-template-columns:1fr}
+  .cloud-auth-actions{grid-column:auto}
+}
+</style>
 </head>
-<body><header><b>★ DB Collection</b><div class="header-right"><span>Fusion World · V5.2.4</span><div class="header-backup"><button id="exportBackup" type="button" title="Exporter toute la collection">↓ Export</button><label title="Importer une sauvegarde">↑ Import sauvegarde<input id="importBackup" type="file" accept=".json,application/json" onchange="importDBBackupDirect(this.files&&this.files[0],this)"></label></div></div></header><div class="web-exp-banner"><b>Version Web expérimentale V0.1.2</b> — copie indépendante de la V5.4.9 locale. La collection et les fichiers Cardmarket sont stockés localement dans ce navigateur.</div><main>
+<body><header><b>★ DB Collection</b><div class="header-right"><span>Fusion World · V5.2.4</span><div class="header-backup"><button id="exportBackup" type="button" title="Exporter toute la collection">↓ Export</button><label title="Importer une sauvegarde">↑ Import sauvegarde<input id="importBackup" type="file" accept=".json,application/json" onchange="importDBBackupDirect(this.files&&this.files[0],this)"></label></div></div></header><div class="web-exp-banner"><b>Version Web expérimentale V0.2</b> — copie indépendante de la V5.4.9 locale. La collection et les fichiers Cardmarket sont stockés localement dans ce navigateur.</div><main>
 <section class="hero"><small>ORDRE OFFICIEL DES SÉRIES</small><h1>Du numéro 001<br>jusqu’aux Special Reprints.</h1><p>Le mode série suit maintenant l’ordre naturel du set : cartes 001 → fin de série, puis réimpressions spéciales.</p></section>
+
+<section class="panel cloud-panel">
+  <div id="cloudToggle" class="head module-toggle" onclick="
+    const b=document.getElementById('cloudBody');
+    b.classList.toggle('hide');
+    const l=this.querySelector('.module-toggle-label');
+    if(l)l.textContent=b.classList.contains('hide')?'Afficher ▾':'Masquer ▴';
+  ">
+    <div><small>CLOUD — WEB V0.2</small><h2>Synchronisation entre appareils</h2></div>
+    <div class="module-toggle-label">Afficher ▾</div>
+  </div>
+
+  <div id="cloudBody" class="module-body hide">
+    <p class="cloud-help">
+      Cette V0.2 synchronise uniquement <b>Ma collection</b> et le <b>Suivi financier</b>.
+      Product Singles et Price Guide restent stockés localement dans chaque navigateur.
+    </p>
+
+    <div class="cloud-config">
+      <label>URL du projet Supabase
+        <input id="cloudUrl" type="url" placeholder="https://xxxxx.supabase.co">
+      </label>
+      <label>Clé Publishable Supabase
+        <input id="cloudKey" type="password" placeholder="sb_publishable_...">
+      </label>
+      <button id="saveCloudConfig" type="button">Enregistrer la configuration</button>
+    </div>
+
+    <div class="cloud-auth">
+      <label>Email
+        <input id="cloudEmail" type="email" autocomplete="email" placeholder="ton@email.fr">
+      </label>
+      <label>Mot de passe
+        <input id="cloudPassword" type="password" autocomplete="current-password" placeholder="••••••••">
+      </label>
+      <div class="cloud-auth-actions">
+        <button id="cloudSignup" type="button">Créer mon compte</button>
+        <button id="cloudLogin" type="button">Se connecter</button>
+        <button id="cloudLogout" type="button">Se déconnecter</button>
+      </div>
+    </div>
+
+    <div class="cloud-sync-actions">
+      <button id="cloudPush" type="button">↑ Envoyer ma collection vers le cloud</button>
+      <button id="cloudPull" type="button">↓ Récupérer ma collection du cloud</button>
+    </div>
+
+    <div id="cloudStatus" class="cloud-status">Cloud non configuré.</div>
+  </div>
+</section>
+
 <section class="stats"><div><span>Valeur totale</span><b id="tv">0,00 €</b></div><div><span>Coût d'achat</span><b id="tc">0,00 €</b></div><div><span>Plus-value</span><b id="tg">0,00 €</b></div><div><span>Cartes</span><b id="tq">0</b></div></section>
 
 <section class="panel">
@@ -1742,6 +1809,256 @@ restoreCardmarketCache();
     };
     reader.readAsText(file);
   };
+})();
+</script>
+
+
+<script>
+(function(){
+  const CONFIG_KEY="db_collection_cloud_config_v1";
+  const SESSION_KEY="db_collection_cloud_session_v1";
+
+  function $(id){return document.getElementById(id)}
+  function status(msg){const e=$("cloudStatus");if(e)e.textContent=msg}
+  function cleanUrl(url){return String(url||"").trim().replace(/\/+$/,"")}
+  function getConfig(){
+    try{return JSON.parse(localStorage.getItem(CONFIG_KEY)||"{}")}catch(e){return {}}
+  }
+  function saveConfig(cfg){
+    localStorage.setItem(CONFIG_KEY,JSON.stringify(cfg));
+  }
+  function getSession(){
+    try{return JSON.parse(localStorage.getItem(SESSION_KEY)||"null")}catch(e){return null}
+  }
+  function saveSession(s){
+    if(s)localStorage.setItem(SESSION_KEY,JSON.stringify(s));
+    else localStorage.removeItem(SESSION_KEY);
+  }
+  function jwtPayload(token){
+    try{
+      const part=token.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");
+      const padded=part+"=".repeat((4-part.length%4)%4);
+      return JSON.parse(decodeURIComponent(Array.from(atob(padded)).map(c=>"%"+c.charCodeAt(0).toString(16).padStart(2,"0")).join("")));
+    }catch(e){return {}}
+  }
+  function configured(){
+    const c=getConfig();
+    return !!(c.url&&c.key);
+  }
+  async function authFetch(path,opts={}){
+    const cfg=getConfig();
+    if(!cfg.url||!cfg.key)throw new Error("Configure d'abord Supabase.");
+    const headers={
+      "apikey":cfg.key,
+      "Content-Type":"application/json",
+      ...(opts.headers||{})
+    };
+    const r=await fetch(cleanUrl(cfg.url)+path,{...opts,headers});
+    const text=await r.text();
+    let data=null;
+    try{data=text?JSON.parse(text):null}catch(e){data=text}
+    if(!r.ok){
+      const msg=data?.msg||data?.message||data?.error_description||data?.error||("HTTP "+r.status);
+      throw new Error(msg);
+    }
+    return data;
+  }
+  async function refreshSession(){
+    const s=getSession();
+    if(!s?.refresh_token)return null;
+    try{
+      const data=await authFetch("/auth/v1/token?grant_type=refresh_token",{
+        method:"POST",
+        body:JSON.stringify({refresh_token:s.refresh_token})
+      });
+      if(data?.access_token){
+        saveSession(data);
+        return data;
+      }
+    }catch(e){
+      saveSession(null);
+    }
+    return null;
+  }
+  async function validSession(){
+    let s=getSession();
+    if(!s?.access_token)return null;
+    const p=jwtPayload(s.access_token);
+    if(p?.exp && Date.now()/1000 > p.exp-60){
+      s=await refreshSession();
+    }
+    return s;
+  }
+  async function restFetch(path,opts={}){
+    const cfg=getConfig();
+    let s=await validSession();
+    if(!cfg.url||!cfg.key)throw new Error("Configure d'abord Supabase.");
+    if(!s?.access_token)throw new Error("Connecte-toi d'abord.");
+    const headers={
+      "apikey":cfg.key,
+      "Authorization":"Bearer "+s.access_token,
+      "Content-Type":"application/json",
+      ...(opts.headers||{})
+    };
+    const r=await fetch(cleanUrl(cfg.url)+"/rest/v1"+path,{...opts,headers});
+    const text=await r.text();
+    let data=null;
+    try{data=text?JSON.parse(text):null}catch(e){data=text}
+    if(!r.ok){
+      const msg=data?.message||data?.details||data?.hint||data?.code||("HTTP "+r.status);
+      throw new Error(msg);
+    }
+    return data;
+  }
+  function currentUserId(){
+    const s=getSession();
+    return s?.access_token?jwtPayload(s.access_token)?.sub:null;
+  }
+  function currentEmail(){
+    const s=getSession();
+    const p=s?.access_token?jwtPayload(s.access_token):{};
+    return p?.email||$("cloudEmail")?.value||"";
+  }
+  function refreshStatus(){
+    const cfg=getConfig();
+    if($("cloudUrl"))$("cloudUrl").value=cfg.url||"";
+    if($("cloudKey"))$("cloudKey").value=cfg.key||"";
+    const uid=currentUserId();
+    if(!cfg.url||!cfg.key){
+      status("Cloud non configuré. Renseigne l'URL Supabase et la clé Publishable.");
+    }else if(uid){
+      status("✅ Connecté : "+currentEmail()+"\nSynchronisation manuelle prête.");
+    }else{
+      status("Supabase configuré. Connecte-toi ou crée ton compte.");
+    }
+  }
+
+  $("saveCloudConfig")?.addEventListener("click",()=>{
+    const url=cleanUrl($("cloudUrl")?.value);
+    const key=String($("cloudKey")?.value||"").trim();
+    if(!/^https:\/\/.+\.supabase\.co$/.test(url)){
+      status("❌ URL Supabase invalide.");
+      return;
+    }
+    if(!key){
+      status("❌ Clé Publishable manquante.");
+      return;
+    }
+    saveConfig({url,key});
+    saveSession(null);
+    status("✅ Configuration Supabase enregistrée dans ce navigateur.\nTu peux maintenant créer ton compte ou te connecter.");
+  });
+
+  $("cloudSignup")?.addEventListener("click",async()=>{
+    try{
+      const email=String($("cloudEmail")?.value||"").trim();
+      const password=String($("cloudPassword")?.value||"");
+      if(!email||password.length<6)throw new Error("Email requis et mot de passe d'au moins 6 caractères.");
+      status("Création du compte…");
+      const data=await authFetch("/auth/v1/signup",{
+        method:"POST",
+        body:JSON.stringify({email,password})
+      });
+      if(data?.access_token){
+        saveSession(data);
+        status("✅ Compte créé et connecté : "+email);
+      }else{
+        status("✅ Compte créé.\nVérifie éventuellement l'email de confirmation Supabase, puis clique sur Se connecter.");
+      }
+    }catch(e){status("❌ "+e.message)}
+  });
+
+  $("cloudLogin")?.addEventListener("click",async()=>{
+    try{
+      const email=String($("cloudEmail")?.value||"").trim();
+      const password=String($("cloudPassword")?.value||"");
+      if(!email||!password)throw new Error("Email et mot de passe requis.");
+      status("Connexion…");
+      const data=await authFetch("/auth/v1/token?grant_type=password",{
+        method:"POST",
+        body:JSON.stringify({email,password})
+      });
+      if(!data?.access_token)throw new Error("Session non reçue.");
+      saveSession(data);
+      status("✅ Connecté : "+email+"\nSynchronisation prête.");
+    }catch(e){status("❌ "+e.message)}
+  });
+
+  $("cloudLogout")?.addEventListener("click",async()=>{
+    const s=getSession();
+    const cfg=getConfig();
+    try{
+      if(s?.access_token&&cfg.url&&cfg.key){
+        await fetch(cleanUrl(cfg.url)+"/auth/v1/logout",{
+          method:"POST",
+          headers:{
+            "apikey":cfg.key,
+            "Authorization":"Bearer "+s.access_token
+          }
+        });
+      }
+    }catch(e){}
+    saveSession(null);
+    status("Déconnecté. Les données locales restent intactes.");
+  });
+
+  $("cloudPush")?.addEventListener("click",async()=>{
+    try{
+      const uid=currentUserId();
+      if(!uid)throw new Error("Connecte-toi d'abord.");
+      if(typeof cards==="undefined"||typeof spends==="undefined")throw new Error("Données locales indisponibles.");
+      const payload={
+        version:"web-v0.2",
+        cards:cards,
+        spends:spends,
+        syncedAt:new Date().toISOString()
+      };
+      if(!confirm(`Envoyer vers le cloud ?\n\n${cards.length} entrée(s) de collection\n${spends.length} dépense(s)\n\nCela remplacera ta sauvegarde cloud actuelle.`))return;
+      status("Envoi vers le cloud…");
+      const body=[{user_id:uid,payload}];
+      const data=await restFetch("/db_collection_sync?on_conflict=user_id",{
+        method:"POST",
+        headers:{
+          "Prefer":"resolution=merge-duplicates,return=representation"
+        },
+        body:JSON.stringify(body)
+      });
+      status("✅ Synchronisation cloud enregistrée.\n"+cards.length+" entrée(s), "+spends.length+" dépense(s).");
+    }catch(e){status("❌ Envoi impossible : "+e.message)}
+  });
+
+  $("cloudPull")?.addEventListener("click",async()=>{
+    try{
+      const uid=currentUserId();
+      if(!uid)throw new Error("Connecte-toi d'abord.");
+      status("Récupération depuis le cloud…");
+      const rows=await restFetch("/db_collection_sync?select=payload,updated_at&user_id=eq."+encodeURIComponent(uid)+"&limit=1");
+      if(!Array.isArray(rows)||!rows.length)throw new Error("Aucune sauvegarde cloud trouvée pour ce compte.");
+      const p=rows[0]?.payload;
+      if(!p||!Array.isArray(p.cards))throw new Error("Sauvegarde cloud invalide.");
+      const cloudSpends=Array.isArray(p.spends)?p.spends:[];
+      if(!confirm(`Récupérer la sauvegarde cloud ?\n\n${p.cards.length} entrée(s) de collection\n${cloudSpends.length} dépense(s)\n\nTa collection locale actuelle sera remplacée.`))return;
+
+      cards=p.cards;
+      spends=cloudSpends;
+
+      try{localStorage.setItem(typeof KEY!=="undefined"?KEY:"db_collection_cards_v530",JSON.stringify(cards))}catch(e){}
+      try{localStorage.setItem(typeof SPEND_KEY!=="undefined"?SPEND_KEY:"db_collection_spends_v1",JSON.stringify(spends))}catch(e){}
+
+      if(typeof renderCollection==="function")renderCollection();
+      if(typeof renderSpends==="function")renderSpends();
+      if(typeof updateFinancialSummary==="function")updateFinancialSummary();
+
+      status("✅ Sauvegarde cloud restaurée dans ce navigateur.\n"+p.cards.length+" entrée(s), "+cloudSpends.length+" dépense(s).");
+    }catch(e){status("❌ Récupération impossible : "+e.message)}
+  });
+
+  (async()=>{
+    if(configured()){
+      await refreshSession().catch(()=>null);
+    }
+    refreshStatus();
+  })();
 })();
 </script>
 
