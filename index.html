@@ -1,0 +1,1626 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DB Collection V5.2.2</title><style>
+*{box-sizing:border-box}body{margin:0;background:#090d13;color:#f5f7fa;font-family:Inter,system-ui,sans-serif}header{position:sticky;top:0;z-index:5;padding:18px 5vw;background:#090d13ee;border-bottom:1px solid #263142;display:flex;justify-content:space-between}header b{color:#ffc928}header span{color:#8d9bad}main{width:min(1220px,calc(100% - 28px));margin:auto;padding:42px 0}.hero small,.panel small{color:#ffc928;letter-spacing:.15em;font-weight:800}.hero h1{font-size:clamp(2rem,5vw,4rem);letter-spacing:-.05em;line-height:1;margin:10px 0}.hero p{color:#96a3b5}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:28px 0 16px}.stats div,.panel,.vcard,.ccard{background:#111722;border:1px solid #263142;border-radius:18px}.stats div{padding:18px}.stats span{display:block;color:#96a3b5;font-size:.78rem}.stats b{display:block;font-size:1.45rem;margin-top:8px}.panel{padding:20px;margin-top:16px}.head{display:flex;align-items:center;justify-content:space-between;gap:15px}.head h2{margin:5px 0 15px}.head>span{background:#172130;color:#55d98a;padding:7px 10px;border-radius:99px;font-size:.75rem}.tabs{display:flex;gap:8px;margin-bottom:20px}.tab{background:#172130;color:#9aa8bb;border:1px solid #2a3749}.tab.active{background:linear-gradient(135deg,#ffc928,#ff8b2b);color:#15110a}.search{display:flex;gap:8px}.search input{flex:1}.series-controls{display:grid;grid-template-columns:1.35fr 1.5fr .8fr .9fr;gap:8px}input,select{width:100%;background:#0d141e;color:white;border:1px solid #2a3749;border-radius:10px;padding:12px}button{border:0;border-radius:10px;padding:12px 15px;background:linear-gradient(135deg,#ffc928,#ff8b2b);font-weight:800;cursor:pointer}.msg{padding:12px;background:#0d141e;border-radius:10px;color:#a8b4c5}.hide{display:none!important}.variants{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-top:15px}.vcard{overflow:hidden;position:relative}.order-badge{position:absolute;top:8px;left:8px;z-index:2;background:#090d13dd;border:1px solid #35465c;border-radius:999px;padding:5px 8px;font-size:.62rem;color:#c7d4e6}.special-badge{position:absolute;top:8px;right:8px;z-index:2;background:#6f2d15dd;border:1px solid #a94d24;border-radius:999px;padding:5px 8px;font-size:.6rem;color:#ffd2b8;font-weight:800}.vcard img{display:block;width:100%;aspect-ratio:600/840;object-fit:contain;background:#090d13}.vb{padding:11px}.vb .tag{color:#ffc928;font-size:.68rem;font-weight:800}.vb .release{display:inline-block;margin:5px 0;padding:4px 6px;border-radius:999px;background:#172130;color:#9fc8ff;font-size:.62rem;font-weight:700}.vb h3{margin:4px 0;font-size:.9rem}.vb p{font-size:.7rem;color:#96a3b5;min-height:48px}.vb button{width:100%;padding:9px}.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:15px}label{font-size:.78rem;color:#96a3b5;display:flex;flex-direction:column;gap:6px}.collection{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.ccard{overflow:hidden}.ccard img{width:100%;aspect-ratio:600/840;object-fit:contain;background:#090d13}.cb{padding:12px}.cb h3{margin:4px 0}.cb small{color:#ffc928}.cb p{font-size:.75rem;color:#96a3b5}.cb .source{color:#9fc8ff}.cb .del{background:none;color:#ff6b6b;padding:0}.gain{color:#55d98a}#empty{text-align:center;color:#96a3b5;padding:25px}@media(max-width:1000px){.variants{grid-template-columns:repeat(4,1fr)}.series-controls{grid-template-columns:1fr 1fr}}@media(max-width:750px){.variants,.collection{grid-template-columns:repeat(2,1fr)}.formgrid{grid-template-columns:repeat(2,1fr)}}@media(max-width:550px){.stats{grid-template-columns:repeat(2,1fr)}.search{flex-direction:column}.series-controls,.formgrid{grid-template-columns:1fr}.panel{padding:14px}}
+.backbar{margin-top:14px;display:flex;align-items:center}
+.backbtn{background:#172130;color:#f5f7fa;border:1px solid #35465c;padding:10px 14px}
+.backbtn:hover{background:#202c3d}
+
+
+.edit-actions{display:flex;gap:8px;margin-top:10px}
+.editbtn{background:#172130!important;color:#9fc8ff!important;border:1px solid #35465c!important;padding:7px 9px!important}
+#cancelEdit{background:#172130;color:#f5f7fa;border:1px solid #35465c}
+.editing-note{color:#ffc928;font-size:.8rem;margin-top:6px}
+
+.checking{opacity:.7}
+.single-card{border-color:#355844!important}
+.multi-card{border-color:#66551e!important}
+
+.valuation-info{margin-bottom:16px;padding:14px 16px;border:1px solid #35465c;border-radius:14px;background:#0d141e;display:flex;flex-direction:column;gap:5px}
+.valuation-info strong{color:#ffc928}
+.valuation-info span{font-size:.78rem;color:#96a3b5;line-height:1.45}
+.market-line{margin-top:8px;padding-top:8px;border-top:1px solid #263142}
+.market-line b{color:#ffc928}
+
+.price-sync{margin:16px 0;padding:16px;border:1px solid #35465c;border-radius:14px;background:#0d141e}
+.price-sync h3{margin:0 0 6px;color:#ffc928}.price-sync p{margin:0 0 12px;color:#96a3b5;font-size:.8rem;line-height:1.45}
+.price-actions{display:flex;gap:8px;flex-wrap:wrap}.file-label{display:inline-flex;align-items:center;justify-content:center;padding:10px 13px;border-radius:10px;border:1px solid #35465c;background:#172130;color:#f5f7fa;cursor:pointer;font-weight:700;font-size:.8rem}
+.file-label input{display:none}#priceSyncStatus{margin-top:10px;font-size:.78rem;color:#9fc8ff;white-space:pre-line}
+.price-source{font-size:.66rem;color:#96a3b5;margin-top:5px;line-height:1.35}
+
+.lang-badge{display:inline-block;margin-left:5px;padding:2px 6px;border:1px solid #35465c;border-radius:999px;font-size:.62rem;color:#9fc8ff;vertical-align:middle}
+
+#reloadCardmarket{padding:10px 13px;border-radius:10px;border:1px solid #35465c;background:#172130;color:#f5f7fa;font-weight:700;cursor:pointer}
+#reloadCardmarket:disabled{opacity:.45;cursor:not-allowed}
+
+.collection-series{margin:18px 0 26px}
+.collection-series-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;padding:12px 14px;border:1px solid #35465c;border-radius:14px;background:#0d141e}
+.collection-series-head h3{margin:0;font-size:1rem;color:#ffc928}
+.collection-series-head .progress{font-size:.78rem;color:#9fc8ff;white-space:nowrap}
+.collection-series-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.collection-series-empty{font-size:.8rem;color:#96a3b5}
+
+.collection-series-head{cursor:pointer;user-select:none}
+.collection-series-head:hover{background:#121c28}
+.collection-series-toggle{font-size:.82rem;color:#96a3b5;margin-left:auto}
+.collection-series.collapsed .collection-series-grid{display:none}
+.collection-series.collapsed{margin-bottom:12px}
+
+.collection-series-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;align-items:start}
+.collection-series-grid .ccard{min-width:0;width:100%;margin:0}
+@media(max-width:1100px){.collection-series-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:820px){.collection-series-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.collection-series-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.collection-series-grid{grid-template-columns:1fr}}
+
+#collection{display:block;width:100%}
+.collection-series{display:block;width:100%;margin:14px 0}
+.collection-series-head{width:100%;box-sizing:border-box}
+.collection-series-grid{width:100%;box-sizing:border-box;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;align-items:start;margin-top:12px}
+.collection-series-grid .ccard{width:100%;min-width:0;margin:0}
+@media(max-width:1100px){.collection-series-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:820px){.collection-series-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.collection-series-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.collection-series-grid{grid-template-columns:1fr}}
+
+.spend-panel{margin-bottom:18px}
+.spend-form{display:grid;grid-template-columns:1fr 160px auto;gap:10px;margin-bottom:14px}
+.spend-form input{min-width:0}
+.spend-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:12px 0}
+.spend-summary>div{padding:12px;border:1px solid #35465c;border-radius:12px;background:#0d141e}
+.spend-summary small{display:block;color:#96a3b5;margin-bottom:5px}
+.spend-summary strong{font-size:1rem}
+.spend-list{display:flex;flex-direction:column;gap:8px}
+.spend-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:9px 11px;border:1px solid #263142;border-radius:10px;background:#0b1119}
+.spend-row .meta{display:flex;flex-direction:column;gap:2px}
+.spend-row .meta small{color:#96a3b5}
+.spend-row button{padding:6px 9px}
+@media(max-width:900px){.spend-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.spend-form{grid-template-columns:1fr}}
+
+.backup-panel{margin-bottom:18px}
+.backup-help{color:#96a3b5;font-size:.82rem;line-height:1.5;margin:0 0 12px}
+.backup-actions{display:flex;gap:10px;flex-wrap:wrap}
+.backup-actions button{padding:10px 13px;border-radius:10px;border:1px solid #35465c;background:#172130;color:#f5f7fa;font-weight:700;cursor:pointer}
+#backupStatus{margin-top:10px;font-size:.76rem;color:#9fc8ff;white-space:pre-line}
+
+.header-right{display:flex;align-items:center;gap:14px}
+.header-backup{display:flex;gap:6px}
+.header-backup button,.header-backup label{display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:9px;border:1px solid #35465c;background:#172130;color:#f5f7fa;font-size:.72rem;font-weight:800;cursor:pointer}
+.header-backup input{display:none}
+@media(max-width:650px){header{align-items:flex-start}.header-right{flex-direction:column;align-items:flex-end;gap:6px}.header-right>span{font-size:.7rem}.header-backup button,.header-backup label{padding:6px 8px}}
+
+.spend-toggle{cursor:pointer;user-select:none;margin-bottom:0}
+.spend-toggle:hover{opacity:.92}
+.spend-toggle-label{margin-left:auto;color:#9fc8ff;font-size:.78rem;font-weight:800}
+.spend-body{margin-top:16px}
+
+.module-toggle{cursor:pointer;user-select:none;margin-bottom:0}
+.module-toggle:hover{opacity:.92}
+.module-toggle-label{margin-left:auto;color:#9fc8ff;font-size:.78rem;font-weight:800}
+.module-body{margin-top:16px}
+</style>
+<style>
+.cm-result-price{margin:8px 0 10px;padding:8px 9px;border:1px solid #35465c;border-radius:10px;background:#0d141e}
+.cm-result-line{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:2px 0}
+.cm-result-line span{font-size:.66rem;color:#96a3b5}
+.cm-result-line b{font-size:.84rem;color:#ffc928}
+.cm-result-hint{font-size:.68rem;color:#96a3b5;line-height:1.35}
+</style>
+
+<style>
+.checklist-wrap{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #263142}
+.checklist-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.checklist-head strong{color:#ffc928}
+.checklist-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.check-card{background:#111722;border:1px solid #263142;border-radius:14px;overflow:hidden}
+.check-card img{width:100%;aspect-ratio:600/840;object-fit:contain;background:#090d13;display:block}
+.check-card .body{padding:9px}
+.check-card .body small{color:#ffc928}
+.check-card .body h4{margin:4px 0;font-size:.82rem}
+.check-card .body p{margin:0;font-size:.68rem;color:#96a3b5}
+.check-card.missing{opacity:.4;filter:grayscale(1)}
+.check-card .state{display:inline-block;margin-top:7px;padding:3px 6px;border:1px solid #566273;border-radius:999px;font-size:.6rem}
+.check-card.owned .state{color:#55d98a;border-color:#2f6d4a}
+@media(max-width:1100px){.checklist-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:850px){.checklist-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.checklist-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+
+<style>
+.collection-missing{opacity:.40;filter:grayscale(1)}
+.collection-missing:hover{opacity:.60}
+.collection-missing .missing-label{display:inline-block;margin-top:8px;padding:3px 7px;border:1px solid #566273;border-radius:999px;font-size:.62rem;color:#b8c0cb}
+.unified-loading{grid-column:1/-1;padding:20px;text-align:center;color:#96a3b5}
+</style>
+
+<style>
+.add-missing-card{width:100%;margin-top:9px;padding:8px 9px;font-size:.7rem}
+.collection-missing:hover .add-missing-card{opacity:1}
+</style>
+
+<style>
+.web-exp-banner{
+  margin:14px auto 0;
+  width:min(1220px,calc(100% - 28px));
+  padding:9px 12px;
+  border:1px solid #35465c;
+  border-radius:12px;
+  background:#0d141e;
+  color:#96a3b5;
+  font-size:.75rem;
+}
+.web-exp-banner b{color:#ffc928}
+</style>
+</head>
+<body><header><b>★ DB Collection</b><div class="header-right"><span>Fusion World · V5.2.4</span><div class="header-backup"><button id="exportBackup" type="button" title="Exporter toute la collection">↓ Export</button><label title="Importer une sauvegarde">↑ Import sauvegarde<input id="importBackup" type="file" accept=".json,application/json" onchange="importDBBackupDirect(this.files&&this.files[0],this)"></label></div></div></header><div class="web-exp-banner"><b>Version Web expérimentale V0.1</b> — copie indépendante de la V5.4.9 locale. Les données restent pour l’instant stockées dans ce navigateur.</div><main>
+<section class="hero"><small>ORDRE OFFICIEL DES SÉRIES</small><h1>Du numéro 001<br>jusqu’aux Special Reprints.</h1><p>Le mode série suit maintenant l’ordre naturel du set : cartes 001 → fin de série, puis réimpressions spéciales.</p></section>
+<section class="stats"><div><span>Valeur totale</span><b id="tv">0,00 €</b></div><div><span>Coût d'achat</span><b id="tc">0,00 €</b></div><div><span>Plus-value</span><b id="tg">0,00 €</b></div><div><span>Cartes</span><b id="tq">0</b></div></section>
+
+<section class="panel">
+<div id="searchToggle" class="head module-toggle" onclick="const b=document.getElementById('searchBody');b.classList.toggle('hide');const l=this.querySelector('.module-toggle-label');if(l)l.textContent=b.classList.contains('hide')?'Afficher ▾':'Masquer ▴';"><div><small>RECHERCHE</small><h2>Rechercher / parcourir les cartes</h2></div><div class="module-toggle-label">Afficher ▾</div></div>
+<div id="searchBody" class="module-body hide">
+<div class="tabs"><button id="tabRef" type="button" class="tab active" onclick="
+document.getElementById('tabRef').classList.add('active');
+document.getElementById('tabSeries').classList.remove('active');
+document.getElementById('refMode').classList.remove('hide');
+document.getElementById('seriesMode').classList.add('hide');
+document.getElementById('variants').innerHTML='';
+document.getElementById('backBar').classList.add('hide');
+document.getElementById('msg').classList.add('hide');
+">Par référence</button><button id="tabSeries" type="button" class="tab" onclick="
+document.getElementById('tabSeries').classList.add('active');
+document.getElementById('tabRef').classList.remove('active');
+document.getElementById('seriesMode').classList.remove('hide');
+document.getElementById('refMode').classList.add('hide');
+document.getElementById('variants').innerHTML='';
+document.getElementById('backBar').classList.add('hide');
+document.getElementById('msg').classList.add('hide');
+">Par série</button></div>
+
+<div id="refMode">
+ <div class="head"><div><small>RECHERCHE</small><h2>Référence Fusion World</h2></div><span id="status">Prêt</span></div>
+ <div class="search"><input id="ref" placeholder="Ex. FS01-15, FB01-001..."><button id="go">Rechercher</button></div>
+</div>
+
+<div id="seriesMode" class="hide">
+ <div class="head"><div><small>CATALOGUE</small><h2>Parcourir une série</h2></div><span id="seriesCount">—</span></div>
+ <div class="series-controls">
+  <select id="seriesSelect" onchange="
+if(window.loadSeries){window.loadSeries();}
+else{
+ document.getElementById('msg').textContent='Le catalogue de série ne peut pas être chargé : moteur de recherche indisponible.';
+ document.getElementById('msg').classList.remove('hide');
+}
+">
+   <option value="">Choisir une série…</option>
+   <option value="FB01">FB01 - Awakened Pulse</option><option value="FB02">FB02 - Blazing Aura</option>
+   <option value="FB03">FB03 - Raging Roar</option><option value="FB04">FB04 - Ultra Limit</option>
+   <option value="FB05">FB05 - New Adventure</option><option value="FB06">FB06 - Rivals Clash</option>
+   <option value="FB07">FB07 - Wish for Shenron</option><option value="FB08">FB08 - Saiyan's Pride</option>
+   <option value="FB09">FB09 - Dual Evolution</option><option value="FB10">FB10 - Cross Force</option>
+   <option value="SB01">SB01 - Manga Booster 01</option><option value="SB02">SB02 - Manga Booster 02</option>
+   <option value="FS01">FS01 - Starter Deck Son Goku</option><option value="FS02">FS02 - Starter Deck Vegeta</option>
+   <option value="FS03">FS03 - Starter Deck Broly</option><option value="FS04">FS04 - Starter Deck Frieza</option>
+   <option value="FS05">FS05 - Starter Deck Bardock</option><option value="FS06">FS06 - Starter Deck Son Goku (Mini)</option>
+   <option value="FS07">FS07 - Starter Deck Vegeta (Mini)</option><option value="FS08">FS08 - Starter Deck Vegeta (Mini) SS3</option>
+   <option value="FS09">FS09 - Starter Deck EX Shallot</option><option value="FS10">FS10 - Starter Deck EX Giblet</option>
+   <option value="FS11">FS11 - Starter Deck EX The Phase of Evolution</option><option value="FS12">FS12 - Starter Deck EX The Beat of Ki</option>
+  </select>
+  <input id="seriesText" placeholder="Filtrer par nom ou référence">
+  <select id="rarityFilter"><option value="">Toutes raretés</option><option>L</option><option>C</option><option>UC</option><option>R</option><option>SR</option><option>SCR</option></select>
+  <select id="versionFilter"><option value="">Toutes versions</option><option value="standard">Cartes du set</option><option value="parallel">Special Reprints</option></select>
+ </div>
+</div>
+
+<p id="msg" class="msg hide"></p>
+<div id="backBar" class="backbar hide"><button id="backSeries" class="backbtn">← Retour à la série</button></div>
+<div id="variants" class="variants"></div>
+  </div>
+</section>
+
+<section id="selectionPanel" class="panel hide"><div class="head"><div><small>SÉLECTION</small><h2 id="formTitle">Ajouter à ma collection</h2></div><button id="cancelEdit" class="hide" type="button">Annuler la modification</button></div>
+<form id="form"><input id="img" type="hidden"><div class="formgrid">
+<label>Nom<input id="name" required></label><label>Référence exacte<input id="exact"></label><label>Code d'origine<input id="baseCode"></label>
+<label>Produit / édition<input id="releaseSet"></label><label>Série de la carte<input id="cardSet"></label><label>Rareté<input id="rarity"></label>
+<label>Version<input id="version"></label><label>Langue<select id="language">
+<option value="EN">Anglais</option>
+<option value="FR">Français</option>
+<option value="DE">Allemand</option>
+<option value="IT">Italien</option>
+<option value="ES">Espagnol</option>
+<option value="JP">Japonais</option>
+</select></label>
+<label>État<select id="condition"><option>Near Mint</option><option>Excellent</option><option>Good</option><option>Light Played</option><option>Played</option></select></label>
+<label>Quantité<input id="qty" type="number" min="1" value="1"></label><label>Prix d'achat (€)<input id="buy" type="number" min="0" step=".01" value="0"></label>
+<label>Valeur Cardmarket unitaire (€)<input id="market" type="number" min="0" step=".01" value="0" placeholder="Ex. 12,50"></label>
+</div><button>Ajouter</button></form></section>
+
+<section class="panel price-sync">
+<div id="cardmarketToggle" class="head module-toggle" onclick="const b=document.getElementById('cardmarketBody');b.classList.toggle('hide');const l=this.querySelector('.module-toggle-label');if(l)l.textContent=b.classList.contains('hide')?'Afficher ▾':'Masquer ▴';"><div><small>PRIX</small><h2>Valorisation Cardmarket</h2></div><div class="module-toggle-label">Afficher ▾</div></div>
+<div id="cardmarketBody" class="module-body hide">
+<p>Importe les deux fichiers officiels Cardmarket. Pour le japonais, le logiciel utilise désormais les éditions Cardmarket JP/non-English distinctes (ex. FB01 international ≠ FB01-JP). Pour EN/FR/DE/IT/ES, il conserve l'édition internationale du produit.</p>
+<div class="price-actions">
+<label class="file-label">1 · Importer products_singles_13.json<input id="catalogFile" type="file" accept=".json,application/json" onchange="if(window.importCMFile)window.importCMFile(this.files&&this.files[0],'products');else alert('Moteur Cardmarket indisponible')"></label>
+<label class="file-label">2 · Importer price_guide_13.json<input id="priceFile" type="file" accept=".json,application/json" onchange="if(window.importCMFile)window.importCMFile(this.files&&this.files[0],'prices');else alert('Moteur Cardmarket indisponible')"></label>
+<button id="reloadCardmarket" type="button" onclick="if(window.reloadCardmarketPrices)window.reloadCardmarketPrices();else alert('Moteur Cardmarket indisponible')">↻ Recharger Product + Price Guide</button>
+</div>
+<div id="priceSyncStatus">Importe le catalogue puis le Price Guide.</div>
+  </div>
+</section>
+
+<section class="panel spend-panel">
+  <div id="spendToggle" class="head spend-toggle" onclick="const b=document.getElementById('spendBody');b.classList.toggle('hide');const l=this.querySelector('.spend-toggle-label');if(l)l.textContent=b.classList.contains('hide')?'Afficher ▾':'Masquer ▴';">
+    <div><small>SUIVI FINANCIER</small><h2>Dépenses liées à la collection</h2></div>
+    <div class="spend-toggle-label">Afficher ▾</div>
+  </div>
+  <div id="spendBody" class="spend-body hide">
+  <div class="spend-form">
+    <input id="spendLabel" type="text" placeholder="Ex. Display FB06, 12 boosters, achat salon">
+    <input id="spendAmount" type="number" min="0" step=".01" placeholder="Montant €">
+    <button id="addSpend" type="button">Ajouter la dépense</button>
+  </div>
+  <div class="spend-summary">
+    <div><small>Dépenses annexes</small><strong id="extraSpendTotal">0,00 €</strong></div>
+    <div><small>Dépenses totales</small><strong id="allSpendTotal">0,00 €</strong></div>
+    <div><small>Valeur collection</small><strong id="spendCollectionValue">0,00 €</strong></div>
+    <div><small>Résultat réel</small><strong id="realPnL">0,00 €</strong></div>
+    <div><small>Rendement</small><strong id="roiPct">0 %</strong></div>
+  </div>
+  <div id="spendList" class="spend-list"></div>
+  </div>
+</section>
+
+<section class="panel">
+<div id="inventoryToggle" class="head module-toggle" onclick="const b=document.getElementById('inventoryBody');b.classList.toggle('hide');const l=this.querySelector('.module-toggle-label');if(l)l.textContent=b.classList.contains('hide')?'Afficher ▾':'Masquer ▴';"><div><small>INVENTAIRE</small><h2>Ma collection</h2></div><div class="module-toggle-label">Afficher ▾</div></div>
+<div id="inventoryBody" class="module-body hide">
+<div class="head"><div><small>MES CARTES</small><h2>Inventaire</h2></div><input id="filter" placeholder="Rechercher"></div><div id="collection" class="collection"></div><p id="empty">Aucune carte.</p>
+</div></section>
+</main>
+
+<script>
+const $=x=>document.getElementById(x),KEY="db_collection_cards_v530";let editingId=null;let cards=JSON.parse(localStorage.getItem(KEY)||localStorage.getItem("db_collection_cards_v521")||localStorage.getItem("db_collection_cards_v520")||localStorage.getItem("db_collection_cards_v519")||localStorage.getItem("db_collection_cards_v518")||localStorage.getItem("db_collection_cards_v517")||localStorage.getItem("db_collection_cards_v516")||localStorage.getItem("db_collection_cards_v515")||localStorage.getItem("db_collection_cards_v514")||localStorage.getItem("db_collection_cards_v513")||localStorage.getItem("db_collection_cards_v512")||localStorage.getItem("db_collection_cards_v511")||localStorage.getItem("db_collection_cards_v501")||localStorage.getItem("db_collection_cards_v44")||localStorage.getItem("db_collection_cards_v43")||localStorage.getItem("db_collection_cards_v424")||localStorage.getItem("db_collection_cards_v423")||localStorage.getItem("db_collection_cards_v422")||localStorage.getItem("db_collection_cards_v421")||localStorage.getItem("db_collection_cards_v42")||localStorage.getItem("db_collection_cards_v411")||localStorage.getItem("db_collection_cards_v41")||localStorage.getItem("db_collection_cards_v40")||localStorage.getItem("db_collection_cards_v393")||localStorage.getItem("db_collection_cards_v392")||localStorage.getItem("db_collection_cards_v391")||localStorage.getItem("db_collection_cards_v39")||localStorage.getItem("db_collection_cards_v382")||localStorage.getItem("db_collection_cards_v381")||localStorage.getItem("db_collection_cards_v38")||localStorage.getItem("db_collection_cards_v372")||localStorage.getItem("db_collection_cards_v371")||localStorage.getItem("db_collection_cards_v37")||localStorage.getItem("db_collection_cards_v362")||localStorage.getItem("db_collection_cards_v361")||localStorage.getItem("db_collection_cards_v36")||localStorage.getItem("db_collection_cards_v35")||localStorage.getItem("db_collection_cards_v34")||localStorage.getItem("db_collection_cards_v33")||localStorage.getItem("db_collection_cards_v32")||localStorage.getItem("db_collection_cards_v31")||localStorage.getItem("db_collection_cards_v30")||localStorage.getItem("db_collection_cards_v29")||localStorage.getItem("db_collection_cards_v28")||localStorage.getItem("db_collection_cards_v27")||localStorage.getItem("db_collection_cards_v26")||"[]");
+const SPEND_KEY="db_collection_spends_v1";
+let spends=JSON.parse(localStorage.getItem(SPEND_KEY)||"[]");
+
+window.applyDBCollectionBackup=function(data){
+  if(!data || !Array.isArray(data.cards)) throw new Error("Sauvegarde invalide : cards absent.");
+  const newCards=data.cards;
+  const newSpends=Array.isArray(data.spends)?data.spends:[];
+  cards=newCards;
+  spends=newSpends;
+
+  // Best effort persistence. The UI update does not depend on this succeeding.
+  try{localStorage.setItem(KEY,JSON.stringify(cards))}catch(e){console.warn("Stockage cartes indisponible",e)}
+  try{localStorage.setItem(SPEND_KEY,JSON.stringify(spends))}catch(e){console.warn("Stockage dépenses indisponible",e)}
+
+  try{renderCollection()}catch(e){console.error("Rendu collection",e)}
+  try{renderSpends()}catch(e){console.error("Rendu dépenses",e)}
+  try{updateFinancialSummary()}catch(e){console.error("Résumé financier",e)}
+
+  // Open inventory automatically so the user immediately sees the imported data.
+  const body=document.getElementById("inventoryBody");
+  const toggle=document.getElementById("inventoryToggle");
+  if(body)body.classList.remove("hide");
+  if(toggle){
+    const label=toggle.querySelector(".module-toggle-label");
+    if(label)label.textContent="Masquer ▴";
+  }
+  return {cards:cards.length,spends:spends.length};
+};
+
+const money=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR"}),api="https://api.deckplanet.net/cardsearch/fusion_world_cards?limit=100000";let catalog=null,seriesCards=[];
+const RELEASE_OVERRIDES={"FS01-15":{0:{releaseSet:"FS01 - Starter Deck -Son Goku-",version:"Standard"},1:{releaseSet:"FS01 - Bonus Pack",version:"Bonus Pack FS01"},2:{releaseSet:"FB02 - Blazing Aura",version:"FB02 Parallel"},3:{releaseSet:"Dragon Ball: Sparking! ZERO",version:"Sparking! ZERO"}}};
+const SERIES_SPECIALS={
+"FB02":[
+ {base:"FS01-15",wantedIndex:2,releaseSet:"FB02 - Blazing Aura",version:"FB02 Special Reprint"},
+ {base:"FS03-15",wantedIndex:2,releaseSet:"FB02 - Blazing Aura",version:"FB02 Special Reprint"},
+ {base:"FS04-16",wantedIndex:2,releaseSet:"FB02 - Blazing Aura",version:"FB02 Special Reprint"},
+ {base:"FB01-066",wantedIndex:1,releaseSet:"FB02 - Blazing Aura",version:"FB02 Special Reprint"}
+],
+"FB03":[
+ {base:"FS04-09",wantedIndex:2,releaseSet:"FB03 - Raging Roar",version:"FB03 Special Reprint"},
+ {base:"FB01-049",wantedIndex:4,releaseSet:"FB03 - Raging Roar",version:"FB03 Special Reprint"},
+ {base:"FB01-016",wantedIndex:1,releaseSet:"FB03 - Raging Roar",version:"FB03 Special Reprint"}
+],
+"FB04":[
+ {base:"FB03-102",wantedIndex:1,releaseSet:"FB04 - Ultra Limit",version:"FB04 Special Reprint"},
+ {base:"FB03-137",wantedIndex:1,releaseSet:"FB04 - Ultra Limit",version:"FB04 Special Reprint"},
+ {base:"FB03-077",wantedIndex:1,releaseSet:"FB04 - Ultra Limit",version:"FB04 Special Reprint"}
+],
+"FB05":[
+ {base:"FB01-014",wantedIndex:1,releaseSet:"FB05 - New Adventure",version:"FB05 Reprint"},
+ {base:"FB01-049",wantedIndex:4,releaseSet:"FB05 - New Adventure",version:"FB05 Reprint"},
+ {base:"FB01-077",wantedIndex:1,releaseSet:"FB05 - New Adventure",version:"FB05 Reprint"},
+ {base:"FB02-035",wantedIndex:2,releaseSet:"FB05 - New Adventure",version:"FB05 Reprint"},
+ {base:"FB02-044",wantedIndex:2,releaseSet:"FB05 - New Adventure",version:"FB05 Reprint"},
+ {base:"FB02-089",wantedIndex:2,releaseSet:"FB05 - New Adventure",version:"FB05 Reprint"},
+ {base:"FB02-135",wantedIndex:1,releaseSet:"FB05 - New Adventure",version:"FB05 Reprint"},
+ {base:"FB03-020",wantedIndex:2,releaseSet:"FB05 - New Adventure",version:"FB05 Reprint"},
+ {base:"FB03-042",wantedIndex:2,releaseSet:"FB05 - New Adventure",version:"FB05 Reprint"},
+ {base:"FB03-125",wantedIndex:2,releaseSet:"FB05 - New Adventure",version:"FB05 Reprint"},
+ {base:"FB04-091",wantedIndex:3,releaseSet:"FB05 - New Adventure",version:"FB05 Reprint"},
+ {base:"FB04-109",wantedIndex:1,releaseSet:"FB05 - New Adventure",version:"FB05 Reprint"},
+ {base:"FS05-16",wantedIndex:3,releaseSet:"FB05 - New Adventure",version:"FB05 Reprint"}
+],
+"FB06":[
+ {base:"FB03-039",wantedIndex:2,releaseSet:"FB06 - Rivals Clash",version:"FB06 Special Reprint"},
+ {base:"FB04-002",wantedIndex:1,releaseSet:"FB06 - Rivals Clash",version:"FB06 Special Reprint"},
+ {base:"FB05-115",wantedIndex:1,releaseSet:"FB06 - Rivals Clash",version:"FB06 Special Reprint"}
+],
+"FB07":[
+ {base:"FB04-095",wantedIndex:4,releaseSet:"FB07 - Wish For Shenron",version:"FB07 Reprint"},
+ {base:"FP-027",wantedIndex:2,releaseSet:"FB07 - Wish For Shenron",version:"FB07 Reprint"},
+ {base:"FS05-03",wantedIndex:2,releaseSet:"FB07 - Wish For Shenron",version:"FB07 Reprint"}
+],
+"FB07":[
+ {base:"FB04-095",wantedIndex:4,releaseSet:"FB07 - Wish for Shenron",version:"FB07 Reprint"},
+ {base:"FP-027",wantedIndex:2,releaseSet:"FB07 - Wish for Shenron",version:"FB07 Reprint"},
+ {base:"FS05-03",wantedIndex:2,releaseSet:"FB07 - Wish for Shenron",version:"FB07 Reprint"}
+],
+"FB08":[
+ {base:"FB02-049",wantedIndex:3,releaseSet:"FB08 - Saiyan’s Pride",version:"FB08 Reprint"},
+ {base:"FB02-104",wantedIndex:1,releaseSet:"FB08 - Saiyan’s Pride",version:"FB08 Reprint"},
+ {base:"FB04-105",wantedIndex:2,releaseSet:"FB08 - Saiyan’s Pride",version:"FB08 Reprint",imageSuffix:"_p2"}
+]
+};
+const PRODUCT_TOTALS={
+ "FB01":163,"FB02":163,"FB03":163,"FB04":158,"FB05":154,"FB06":143,"FB07":158,
+ "FB08":158,
+ "FB09":164,
+ "FB10":162};
+const PRODUCT_REFERENCE_TOTALS={"FB01":140,"FB02":140,"FB03":140,"FB04":130,"FB05":120,"FB06":120,"FB07":122,"FB08":122,"FB09":123,"FB10":123};
+
+
+const SERIES_VARIANT_RULES={
+  // Séries fiabilisées depuis les résultats officiels Bandai filtrés par produit.
+  // Toute référence absente de la table du set = Standard uniquement.
+  "FB01":{
+    "FB01-001":[0,1],
+    "FB01-002":[0,1],
+    "FB01-015":[0,1],
+    "FB01-021":[0,1],
+    "FB01-023":[0,1],
+    "FB01-035":[0,1],
+    "FB01-036":[0,1],
+    "FB01-039":[0,1],
+    "FB01-050":[0,1],
+    "FB01-062":[0,1],
+    "FB01-070":[0,1],
+    "FB01-071":[0,1],
+    "FB01-078":[0,1],
+    "FB01-079":[0,1],
+    "FB01-096":[0,1],
+    "FB01-104":[0,1],
+    "FB01-105":[0,1],
+    "FB01-109":[0,1],
+    "FB01-113":[0,1],
+    "FB01-129":[0,1],
+    "FB01-139":[0,1,2],
+    "FB01-140":[0,1]
+  },
+  "FB02":{
+    "FB02-001":[0,1],
+    "FB02-013":[0,1],
+    "FB02-015":[0,1],
+    "FB02-018":[0,1],
+    "FB02-036":[0,1],
+    "FB02-043":[0,1],
+    "FB02-044":[0,1],
+    "FB02-061":[0,1],
+    "FB02-070":[0,1],
+    "FB02-084":[0,1],
+    "FB02-089":[0,1],
+    "FB02-091":[0,1],
+    "FB02-105":[0,1],
+    "FB02-119":[0,1],
+    "FB02-130":[0,1],
+    "FB02-133":[0,1],
+    "FB02-139":[0,1,2],
+    "FB02-140":[0,1]
+  },
+  "FB03":{
+    "FB03-001":[0,1],
+    "FB03-027":[0,1],
+    "FB03-053":[0,1],
+    "FB03-070":[0,1],
+    "FB03-104":[0,1],
+    "FB03-009":[0,1],
+    "FB03-020":[0,1],
+    "FB03-039":[0,1],
+    "FB03-042":[0,1],
+    "FB03-078":[0,1],
+    "FB03-089":[0,1],
+    "FB03-093":[0,1],
+    "FB03-111":[0,1],
+    "FB03-121":[0,1],
+    "FB03-125":[0,1],
+    "FB03-139":[0,1],
+    "FB03-140":[0,1,2]
+  },
+  "FB04":{
+    "FB04-001":[0,1],
+    "FB04-018":[0,1],
+    "FB04-026":[0,1],
+    "FB04-043":[0,1],
+    "FB04-051":[0,1],
+    "FB04-068":[0,1],
+    "FB04-093":[0,1],
+    "FB04-098":[0,1],
+    "FB04-008":[0,1],
+    "FB04-012":[0,1],
+    "FB04-033":[0,1],
+    "FB04-045":[0,1],
+    "FB04-052":[0,1],
+    "FB04-057":[0,1],
+    "FB04-064":[0,1],
+    "FB04-067":[0,1],
+    "FB04-077":[0,1],
+    "FB04-080":[0,1],
+    "FB04-094":[0,1],
+    "FB04-103":[0,1],
+    "FB04-104":[0,1],
+    "FB04-105":[0,1],
+    "FB04-108":[0,1],
+    "FB04-114":[0,1],
+    "FB04-129":[0,1,2],
+    "FB04-130":[0,1]
+  },
+  "FB05":{
+    "FB05-001":[0,1],
+    "FB05-006":[0,1],
+    "FB05-009":[0,1],
+    "FB05-015":[0,1],
+    "FB05-025":[0,1],
+    "FB05-030":[0,1],
+    "FB05-038":[0,1],
+    "FB05-040":[0,1],
+    "FB05-049":[0,1],
+    "FB05-051":[0,1],
+    "FB05-054":[0,1],
+    "FB05-072":[0,1],
+    "FB05-080":[0,1],
+    "FB05-084":[0,1],
+    "FB05-095":[0,1],
+    "FB05-100":[0,1],
+    "FB05-107":[0,1],
+    "FB05-119":[0,1,2],
+    "FB05-120":[0,1,2]
+  },
+  "FB06":{
+    "FB06-001":[0,1],
+    "FB06-002":[0,1],
+    "FB06-009":[0,1],
+    "FB06-025":[0,1],
+    "FB06-029":[0,1],
+    "FB06-032":[0,1],
+    "FB06-048":[0,1],
+    "FB06-055":[0,1],
+    "FB06-063":[0,1],
+    "FB06-071":[0,1],
+    "FB06-072":[0,1],
+    "FB06-076":[0,1],
+    "FB06-084":[0,1],
+    "FB06-095":[0,1],
+    "FB06-097":[0,1],
+    "FB06-103":[0,1],
+    "FB06-109":[0,1],
+    "FB06-119":[0,1],
+    "FB06-120":[0,1,2]
+  },
+  "FB07":{
+    "FB07-001":[0,1],
+    "FB07-003":[0,1],
+    "FB07-009":[0,1],
+    "FB07-010":[0,1],
+    "FB07-017":[0,1],
+    "FB07-021":[0,1],
+    "FB07-025":[0,1],
+    "FB07-026":[0,1],
+    "FB07-030":[0,1],
+    "FB07-033":[0,1],
+    "FB07-034":[0,1],
+    "FB07-035":[0,1],
+    "FB07-049":[0,1],
+    "FB07-051":[0,1],
+    "FB07-052":[0,1],
+    "FB07-057":[0,1],
+    "FB07-058":[0,1],
+    "FB07-066":[0,1],
+    "FB07-073":[0,1],
+    "FB07-078":[0,1],
+    "FB07-079":[0,1],
+    "FB07-083":[0,1],
+    "FB07-088":[0,1],
+    "FB07-093":[0,1],
+    "FB07-097":[0,1],
+    "FB07-104":[0,1],
+    "FB07-105":[0,1],
+    "FB07-106":[0,1],
+    "FB07-113":[0,1],
+    "FB07-114":[0,1],
+    "FB07-122":[0,1],
+    "FB07-121":[0,1,2]
+  },
+  "FB08":{
+    "FB08-001":[0,1],
+    "FB08-007":[0,1],
+    "FB08-009":[0,1],
+    "FB08-012":[0,1],
+    "FB08-016":[0,1],
+    "FB08-019":[0,1],
+    "FB08-025":[0,1],
+    "FB08-026":[0,1],
+    "FB08-029":[0,1],
+    "FB08-032":[0,1],
+    "FB08-034":[0,1],
+    "FB08-040":[0,1],
+    "FB08-049":[0,1],
+    "FB08-051":[0,1],
+    "FB08-055":[0,1],
+    "FB08-056":[0,1],
+    "FB08-059":[0,1],
+    "FB08-065":[0,1],
+    "FB08-073":[0,1],
+    "FB08-076":[0,1],
+    "FB08-084":[0,1],
+    "FB08-087":[0,1],
+    "FB08-088":[0,1],
+    "FB08-092":[0,1],
+    "FB08-097":[0,1],
+    "FB08-100":[0,1],
+    "FB08-102":[0,1],
+    "FB08-106":[0,1],
+    "FB08-111":[0,1],
+    "FB08-112":[0,1],
+    "FB08-122":[0,1],
+    "FB08-121":[0,1,2]
+  },
+  "FB09":{
+    "FB09-005":[0,1],
+    "FB09-007":[0,1],
+    "FB09-011":[0,1],
+    "FB09-012":[0,1],
+    "FB09-013":[0,1],
+    "FB09-029":[0,1],
+    "FB09-031":[0,1],
+    "FB09-036":[0,1],
+    "FB09-037":[0,1],
+    "FB09-044":[0,1],
+    "FB09-045":[0,1],
+    "FB09-049":[0,1],
+    "FB09-051":[0,1],
+    "FB09-055":[0,1],
+    "FB09-060":[0,1],
+    "FB09-064":[0,1],
+    "FB09-068":[0,1],
+    "FB09-072":[0,1],
+    "FB09-073":[0,1],
+    "FB09-082":[0,1],
+    "FB09-088":[0,1],
+    "FB09-091":[0,1],
+    "FB09-093":[0,1],
+    "FB09-096":[0,1],
+    "FB09-097":[0,1],
+    "FB09-100":[0,1],
+    "FB09-105":[0,1],
+    "FB09-110":[0,1],
+    "FB09-112":[0,1],
+    "FB09-114":[0,1],
+    "FB09-117":[0,1],
+    "FB09-001":[0,1,2],
+    "FB09-025":[0,1,2],
+    "FB09-121":[0,1,2],
+    "FB09-122":[0,1,2],
+    "FB09-123":[0,1,2]
+  },
+  "FB10":{
+    "FB10-001":[0,1],
+    "FB10-006":[0,1],
+    "FB10-011":[0,1],
+    "FB10-013":[0,1],
+    "FB10-014":[0,1],
+    "FB10-021":[0,1],
+    "FB10-024":[0,1],
+    "FB10-025":[0,1],
+    "FB10-032":[0,1],
+    "FB10-039":[0,1],
+    "FB10-040":[0,1],
+    "FB10-041":[0,1],
+    "FB10-047":[0,1],
+    "FB10-049":[0,1],
+    "FB10-052":[0,1],
+    "FB10-057":[0,1],
+    "FB10-059":[0,1],
+    "FB10-064":[0,1],
+    "FB10-070":[0,1],
+    "FB10-073":[0,1],
+    "FB10-078":[0,1],
+    "FB10-079":[0,1],
+    "FB10-081":[0,1],
+    "FB10-082":[0,1],
+    "FB10-091":[0,1],
+    "FB10-092":[0,1],
+    "FB10-097":[0,1],
+    "FB10-102":[0,1],
+    "FB10-104":[0,1],
+    "FB10-108":[0,1],
+    "FB10-111":[0,1],
+    "FB10-112":[0,1],
+    "FB10-113":[0,1],
+    "FB10-121":[0,1,2],
+    "FB10-122":[0,1,2],
+    "FB10-123":[0,1,2]
+  }
+};
+
+function allowedVariantIndices(series, ref, detectedCount){
+  const explicit=SERIES_VARIANT_RULES[series]?.[ref];
+  if(Array.isArray(explicit)) return explicit.filter(i=>i<detectedCount);
+  return detectedCount>0?[0]:[];
+}
+
+function norm(s){return String(s||"").trim().toUpperCase().replace(/\s/g,"")}
+function base(s){let m=norm(s).match(/([A-Z]{1,4}\d{1,3}-\d{1,3})/);return m?m[1]:norm(s)}
+function cardNumberFromRef(r){let m=base(r).match(/-(\d+)$/);return m?parseInt(m[1],10):9999}
+function val(c,...k){for(let x of k)if(c&&c[x]!=null)return c[x];return""}
+function prefixSet(r){let p=r.split("-")[0];if(/^FS/.test(p))return `${p} - Starter Deck`;if(/^FB/.test(p))return `${p} - Booster Pack`;if(/^SB/.test(p))return `${p} - Manga Booster`;return p}
+async function loadCatalog(){if(catalog)return catalog;$("status").textContent="Chargement…";let r=await fetch(api);if(!r.ok)throw Error();let j=await r.json();catalog=Array.isArray(j)?j:(j.data?.data||j.data||j.cards||j.results||[]);$("status").textContent=catalog.length+" cartes";return catalog}
+function seriesThumbnail(v){
+  const root="https://www.dbs-cardgame.com/fw/images/cards/card/en/";
+  const isLeader=/leader/i.test(v.type||"") || String(v.rarity||"").replace(/★/g,"").trim()==="L";
+  return isLeader ? `${root}${v.base}_f.webp` : `${root}${v.base}.webp`;
+}
+function imageExists(url){return new Promise(ok=>{let i=new Image;i.onload=()=>ok(url);i.onerror=()=>ok(null);i.src=url+"?v=37"})}
+async function officialImages(ref,isLeader){const root="https://www.dbs-cardgame.com/fw/images/cards/card/en/";let n=isLeader?[`${ref}_f.webp`,`${ref}_f_p1.webp`,`${ref}_f_p2.webp`,`${ref}_f_p3.webp`,`${ref}_f_p4.webp`,`${ref}_f_p5.webp`]:[`${ref}.webp`,`${ref}_p1.webp`,`${ref}_p2.webp`,`${ref}_p3.webp`,`${ref}_p4.webp`,`${ref}_p5.webp`];return (await Promise.all(n.map(x=>imageExists(root+x)))).filter(Boolean)}
+function meta(ref,i){return RELEASE_OVERRIDES[ref]?.[i]||{releaseSet:prefixSet(ref),version:i===0?"Standard":i===1?"Alt Art / Parallel":`Parallel ${i}`}}
+function record(c){let r=base(val(c,"card_number","cardNumber","number","id"));return{base:r,name:val(c,"card_name","cardName","name")||r,cardSet:val(c,"card_series","cardSeries","series","set_name","set")||prefixSet(r),rarity:val(c,"card_rarity","cardRarity","rarity")||"",type:val(c,"card_type","cardType","type")||"",number:cardNumberFromRef(r)}}
+async function variantsForRecord(c){let x=record(c),lead=/leader/i.test(x.type)||(/\/\//.test(x.name)&&/-00[1-5]$/.test(x.base)),imgs=await officialImages(x.base,lead);return imgs.map((image,i)=>{let m=meta(x.base,i);return{...x,image,index:i,exact:x.base+(i?` · P${i}`:""),releaseSet:m.releaseSet,version:m.version}})}
+async function lookup(){let r=base($("ref").value);$("variants").innerHTML="";if(!r)return;try{let d=await loadCatalog(),c=d.find(x=>base(val(x,"card_number","cardNumber","number","id"))===r);if(!c)return show("Référence introuvable.");$("status").textContent="Variantes…";let vs=await variantsForRecord(c);$("status").textContent="Prêt";show(`${vs.length} impression(s) détectée(s) pour ${r}.`);renderVariants(vs)}catch{show("Impossible de charger le catalogue.")}}
+
+async function loadSeries(){
+ let s=$("seriesSelect").value;
+ if(!s){seriesCards=[];renderSeries();return}
+ $("variants").innerHTML="";show("Chargement de la série…");
+ try{
+  let d=await loadCatalog(),uniq=new Map();
+  d.filter(c=>base(val(c,"card_number","cardNumber","number","id")).startsWith(s+"-")).forEach(c=>uniq.set(base(val(c,"card_number","cardNumber","number","id")),c));
+  let normal=[...uniq.values()].map(c=>{let x=record(c);return{...x,raw:c,index:0,version:"Standard",releaseSet:prefixSet(x.base),special:false,seriesContext:s}});
+  normal.sort((a,b)=>a.number-b.number||a.base.localeCompare(b.base));
+
+  let specials=[];
+  for(let [specialOrder,sp] of (SERIES_SPECIALS[s]||[]).entries()){
+    let c=d.find(x=>base(val(x,"card_number","cardNumber","number","id"))===sp.base);
+    if(c){let x=record(c);specials.push({...x,raw:c,index:sp.wantedIndex,imageSuffix:sp.imageSuffix,version:sp.version,releaseSet:sp.releaseSet,special:true,specialOrder,seriesContext:s})}
+  }
+  // Les réimpressions spéciales sont TOUJOURS ajoutées après la dernière carte numérotée du set.
+  seriesCards=[...normal,...specials];
+  const totalVariants=PRODUCT_TOTALS[s];
+  const verifiedRefs=PRODUCT_REFERENCE_TOTALS[s]||normal.length;
+  $("seriesCount").textContent=totalVariants?`${verifiedRefs} références · ${totalVariants} cartes/variantes`:`${normal.length} références`;
+  show(`${normal.length} références de base classées de ${normal[0]?.base||"001"} à ${normal.at(-1)?.base||"fin"}, puis ${specials.length} Special Reprint(s).${PRODUCT_TOTALS[s]?` Total physique connu : ${PRODUCT_TOTALS[s]} cartes/variantes, Alt Art incluses.`:""}`);
+  renderSeries();
+ }catch{show("Impossible de charger cette série.")}
+}
+
+async function seriesVariantsForCard(v){
+  let vs=await variantsForRecord(v.raw);
+  const contextSeries=v.seriesContext||$("seriesSelect").value;
+  const allowed=allowedVariantIndices(contextSeries,v.base,vs.length);
+  return vs.filter(x=>allowed.includes(x.index));
+}
+
+function configureSeriesCardButton(v, cardEl, button, imageGuess){
+  if(v.special) return;
+  const contextSeries=v.seriesContext||$("seriesSelect").value;
+  const allowed=SERIES_VARIANT_RULES[contextSeries]?.[v.base] || [0];
+
+  if(allowed.length<=1){
+    cardEl.classList.add("single-card");
+    button.disabled=false;
+    button.textContent="Choisir cette carte";
+    button.onclick=async()=>{
+      let vs=await seriesVariantsForCard(v);
+      const chosen=vs[0]||{
+        ...v, exact:v.base, image:imageGuess, index:0,
+        releaseSet:v.releaseSet||prefixSet(v.base), version:"Standard"
+      };
+      choose(chosen);
+    };
+  }else{
+    cardEl.classList.add("multi-card");
+    button.disabled=false;
+    button.textContent=`Voir les ${allowed.length} versions`;
+    button.onclick=async()=>{
+      window.__seriesScrollY=window.scrollY;
+      let vs=await seriesVariantsForCard(v);
+      renderVariants(vs);
+      $("backSeries").textContent=`← Retour à ${$("seriesSelect").value || "la série"}`;
+      $("backBar").classList.remove("hide");
+      show(`${vs.length} version(s) vérifiée(s) dans ${contextSeries} pour ${v.base}.`);
+      document.querySelector(".panel").scrollIntoView({behavior:"smooth",block:"start"});
+    };
+  }
+}
+function renderSeries(){$("backBar").classList.add("hide");
+ let txt=$("seriesText").value.toLowerCase(),rar=$("rarityFilter").value,ver=$("versionFilter").value;
+ let list=seriesCards.filter(v=>(v.name+" "+v.base).toLowerCase().includes(txt)&&(!rar||String(v.rarity).replace(/★/g,"")===rar)&&(!ver||(ver==="standard"?!v.special:v.special)));
+ const selectedSeries=$("seriesSelect").value;
+ $("seriesCount").textContent=PRODUCT_TOTALS[selectedSeries]?`${list.length} références affichées · ${PRODUCT_TOTALS[selectedSeries]} cartes/variantes au total`:`${list.length} affichées`;
+ let g=$("variants");g.innerHTML="";
+ list.forEach((v,pos)=>{
+  let e=document.createElement("article");e.className="vcard";
+  let imageGuess;
+  if(v.special){
+    const suffix=v.imageSuffix!==undefined?v.imageSuffix:(v.index>0?`_p${v.index}`:"");
+    imageGuess=`https://www.dbs-cardgame.com/fw/images/cards/card/en/${v.base}${suffix}.webp`;
+    if(v.index<0) imageGuess=`https://www.dbs-cardgame.com/fw/images/cards/card/en/${v.base}.webp`;
+  }else{
+    imageGuess=seriesThumbnail(v);
+  }
+  let orderText=v.special?"Après le set":String(v.number).padStart(3,"0");
+  e.innerHTML=`<span class="order-badge">${orderText}</span>${v.special?`<span class="special-badge">SPECIAL REPRINT</span>`:""}<img src="${imageGuess}" onerror="this.style.visibility='hidden'"><div class="vb"><span class="tag">${v.special?esc(v.version):"Carte / variantes"}</span>${v.special?`<br><span class="release">${esc(v.releaseSet)}</span>`:""}<h3>${esc(v.name)}</h3><p>${v.base}<br>${esc(v.rarity)} · ${esc(v.cardSet)}</p>${seriesSearchPriceBox(v)}<button>${v.special?"Choisir cette carte":"Choisir cette carte"}</button></div>`;
+  const btn=e.querySelector("button");
+  if(v.special){
+    btn.onclick=async()=>{
+      show(`Recherche de la réimpression ${v.base}…`);
+      let vs=await variantsForRecord(v.raw);
+      let wanted=v.index<0?vs.at(-1):vs.find(x=>x.index===v.index);
+      if(wanted){wanted.releaseSet=v.releaseSet;wanted.version=v.version;choose(wanted)}
+    };
+  }else{
+    configureSeriesCardButton(v,e,btn,imageGuess);
+  };g.appendChild(e);
+ })
+}
+function renderVariants(vs){let g=$("variants");g.innerHTML="";vs.forEach(v=>{let e=document.createElement("article");e.className="vcard";e.innerHTML=`<img src="${v.image}"><div class="vb"><span class="tag">${esc(v.version)}</span><br><span class="release">${esc(v.releaseSet)}</span><h3>${esc(v.name)}</h3><p>${v.base}<br>${esc(v.rarity)} · ${esc(v.cardSet)}</p>${searchPriceBox(v)}<button>Choisir</button></div>`;e.querySelector("button").onclick=()=>choose(v);g.appendChild(e)})}
+function choose(v){$("img").value=v.image||"";$("name").value=v.name;$("exact").value=v.exact||v.base;$("baseCode").value=v.base;$("releaseSet").value=v.releaseSet;$("cardSet").value=v.cardSet;$("rarity").value=v.rarity;$("version").value=v.version;if(!$("language").value)$("language").value="EN";fillSearchPriceInForm(v);$("selectionPanel").classList.remove("hide");$("selectionPanel").scrollIntoView({behavior:"smooth",block:"start"})}
+function show(t){$("msg").textContent=t;$("msg").classList.remove("hide")}
+window.loadSeries=loadSeries;
+window.switchSearchMode=function(mode){
+  const ref=$("tabRef"),ser=$("tabSeries"),rm=$("refMode"),sm=$("seriesMode");
+  if(mode==="series"){
+    ser?.classList.add("active");ref?.classList.remove("active");
+    sm?.classList.remove("hide");rm?.classList.add("hide");
+  }else{
+    ref?.classList.add("active");ser?.classList.remove("active");
+    rm?.classList.remove("hide");sm?.classList.add("hide");
+  }
+  if($("variants"))$("variants").innerHTML="";
+  $("backBar")?.classList.add("hide");
+  $("msg")?.classList.add("hide");
+};
+
+
+$("seriesText").oninput=renderSeries;$("rarityFilter").onchange=renderSeries;$("versionFilter").onchange=renderSeries;$("go").onclick=lookup;$("ref").onkeydown=e=>{if(e.key==="Enter")lookup()};
+$("backSeries").onclick=()=>{
+  $("backBar").classList.add("hide");
+  renderSeries();
+  show(`Retour à ${$("seriesSelect").value}. Filtres conservés.`);
+  requestAnimationFrame(()=>window.scrollTo({top:window.__seriesScrollY||0,behavior:"smooth"}));
+};
+
+function collectionIdentity(c){
+  return [
+    String(c.baseCode||c.reference||"").trim().toUpperCase(),
+    String(c.reference||"").trim().toUpperCase(),
+    String(c.releaseSet||"").trim().toUpperCase(),
+    String(c.version||"").trim().toUpperCase(),
+    String(c.language||"EN").trim().toUpperCase(),
+    String(c.condition||"Near Mint").trim().toUpperCase()
+  ].join("|");
+}
+$("form").onsubmit=e=>{
+  e.preventDefault();
+  const item={
+    id:editingId||crypto.randomUUID(),
+    name:$("name").value,
+    reference:$("exact").value,
+    baseCode:$("baseCode").value,
+    releaseSet:$("releaseSet").value,
+    cardSet:$("cardSet").value,
+    rarity:$("rarity").value,
+    version:$("version").value,
+    language:$("language").value||"EN",
+    condition:$("condition").value,
+    quantity:+$("qty").value||1,
+    buyPrice:+$("buy").value||0,
+    marketPrice:+$("market").value||0,
+    imageUrl:$("img").value
+  };
+  if(cmProducts&&cmPrices)applyCMToCard(item);
+  if(editingId){
+    const i=cards.findIndex(c=>c.id===editingId);
+    if(i>=0) cards[i]=item;
+  }else{
+    // Même carte + même variante + même édition + même langue + même état :
+    // on additionne la quantité.
+    // Une carte EN et la même carte JP restent donc TOUJOURS deux entrées distinctes.
+    const same=cards.find(c=>collectionIdentity(c)===collectionIdentity(item));
+    if(same){
+      same.quantity=(+same.quantity||1)+(+item.quantity||1);
+      if(item.buyPrice>0) same.buyPrice=item.buyPrice;
+      if(cmProducts&&cmPrices)applyCMToCard(same);
+    }else{
+      cards.unshift(item);
+    }
+  }
+  localStorage.setItem(KEY,JSON.stringify(cards));
+  editingId=null;
+  e.target.reset();
+  $("qty").value=1;
+  $("formTitle").textContent="Ajouter à ma collection";
+  $("cancelEdit").classList.add("hide");
+  $("selectionPanel").classList.add("hide");
+  renderCollection();
+}
+
+function editCard(id){
+  const c=cards.find(x=>x.id===id);
+  if(!c)return;
+  $("selectionPanel").classList.remove("hide");
+  editingId=id;
+  $("img").value=c.imageUrl||"";
+  $("name").value=c.name||"";
+  $("exact").value=c.reference||"";
+  $("baseCode").value=c.baseCode||"";
+  $("releaseSet").value=c.releaseSet||"";
+  $("cardSet").value=c.cardSet||"";
+  $("rarity").value=c.rarity||"";
+  $("version").value=c.version||"";
+  $("language").value=c.language||"EN";
+  $("condition").value=c.condition||"Near Mint";
+  $("qty").value=c.quantity||1;
+  $("buy").value=c.buyPrice||0;
+  $("market").value=c.marketPrice||0;
+  $("formTitle").textContent="Modifier la carte";
+  $("cancelEdit").classList.remove("hide");
+  document.querySelector("form").scrollIntoView({behavior:"smooth",block:"start"});
+}
+$("cancelEdit").onclick=()=>{
+  editingId=null;
+  $("form").reset();
+  $("qty").value=1;
+  $("formTitle").textContent="Ajouter à ma collection";
+  $("cancelEdit").classList.add("hide");
+  $("selectionPanel").classList.add("hide");
+};
+
+let cmProducts=null,cmPrices=null;
+const CM_EXPANSIONS={
+ "FB01":5552,"FB02":5730,"FB03":5847,"FB04":5905,"FB05":6027,
+ "FB06":6132,"FB07":6183,"FB08":6410,"FB09":6502,"FB10":6594,
+ "FS01":5553,"FS02":5554,"FS03":5555,"FS04":5556,"FS05":5851,
+ "FS06":5916,"FS07":5917,"FS08":6116,"FS09":6164,"FS10":6163,
+ "FS11":6505,"FS12":6506
+};
+const CM_JP_EXPANSIONS={
+ "FB01":5731,
+ "FB02":5767,
+ "FB03":5903,
+ "FB04":5906,
+ "FB05":6076
+};
+function cmStatus(t){const e=document.getElementById("priceSyncStatus");if(e)e.textContent=t}
+function updateReloadButton(){
+ const b=document.getElementById("reloadCardmarket");
+ if(b)b.disabled=false;
+}
+function cmRows(x,key){return Array.isArray(x?.[key])?x[key]:[]}
+function cardBaseCode(c){
+ const s=String(c.baseCode||c.reference||"").toUpperCase();
+ const m=s.match(/(?:FB|FS)\d{2}-\d{1,3}|FP-\d{3}/);
+ return m?m[0]:"";
+}
+function releaseCode(c){
+ const s=String(c.releaseSet||c.cardSet||"").toUpperCase();
+ const m=s.match(/(?:FB|FS)\d{2}/);
+ if(m)return m[0];
+ const b=cardBaseCode(c),p=b.match(/^(?:FB|FS)\d{2}/);
+ return p?p[0]:"";
+}
+function selectedVariantIndex(c){
+ const r=String(c.reference||"");
+ const m=r.match(/·\s*P(\d+)/i);
+ return m?Number(m[1]):0;
+}
+function productCode(name){
+ const m=String(name||"").toUpperCase().match(/\((FB\d{2}-\d{1,3}|FS\d{2}-\d{1,3}|FP-\d{3})\)/);
+ return m?m[1]:"";
+}
+
+
+function cardmarketExpansionId(c){
+  const rel=releaseCode(c);
+  const lang=cmLanguageCode(c);
+  if(lang==="JP"){
+    return CM_JP_EXPANSIONS[rel]||null;
+  }
+  return CM_EXPANSIONS[rel]||null;
+}
+function cmLanguageCode(c){
+  return String(c.language||"EN").toUpperCase();
+}
+function languageFields(row,c){
+  const lang=cmLanguageCode(c);
+  // Cardmarket price-guide JSON is product-level, not language-split.
+  // We therefore keep exact product matching and mark unsupported language-specific pricing.
+  // Japanese Fusion World cards are generally separate Cardmarket products/expansions only if catalogued that way.
+  return {lang,row};
+}
+function priceMetric(row){
+ if(!row)return null;
+ // Price Trend can legitimately be 0 when there are no recent sales.
+ // In that case prefer avg7/avg30, then the currently listed low price.
+ for(const k of ["trend","avg7","avg30","avg","low"]){
+   const n=Number(row[k]);
+   if(Number.isFinite(n)&&n>0)return {value:n,key:k};
+ }
+ return null;
+}
+
+function explainNoMatch(c){
+ const code=cardBaseCode(c),rel=releaseCode(c),eid=cardmarketExpansionId(c);
+ if(!code)return "référence de carte introuvable";
+ if(!rel)return "produit de sortie introuvable";
+ if(!eid){
+   if(cmLanguageCode(c)==="JP")return `édition japonaise Cardmarket non trouvée pour ${rel} dans ce catalogue`;
+   return `extension Cardmarket non configurée (${rel})`;
+ }
+ if(!cmProducts)return "catalogue Cardmarket non chargé";
+ const candidates=cmRows(cmProducts,"products").filter(p=>Number(p.idExpansion)===eid && productCode(p.name)===code);
+ if(!candidates.length)return `aucun produit Cardmarket ${code} dans ${rel} (idExpansion ${eid})`;
+ if(!cmPrices)return "Price Guide non chargé";
+ const pmap=new Map(cmRows(cmPrices,"priceGuides").map(x=>[Number(x.idProduct),x]));
+ const rows=candidates.filter(p=>pmap.has(Number(p.idProduct)));
+ if(!rows.length)return "produit trouvé mais aucun prix dans le Price Guide";
+ return "prix Cardmarket inexploitable";
+}
+
+function searchPriceForVariant(v,lang){
+  if(!(cmProducts&&cmPrices))return null;
+  const probe={
+    baseCode:v.base||v.baseCode||v.reference||"",
+    reference:v.exact||v.reference||v.base||"",
+    releaseSet:v.releaseSet||v.cardSet||"",
+    cardSet:v.cardSet||"",
+    version:v.version||"Standard",
+    language:lang||"EN"
+  };
+  const m=matchCM(probe);
+  if(!m)return null;
+  return {price:Number(m.metric.value)||0,metric:m.metric.key};
+}
+
+function selectedSearchPrice(v){
+  const lang=$("language")?.value||"EN";
+  return searchPriceForVariant(v,lang);
+}
+function fillSearchPriceInForm(v){
+  const p=selectedSearchPrice(v);
+  if(p&&$("market"))$("market").value=p.price;
+}
+function searchPriceBox(v){
+  if(!(cmProducts&&cmPrices))return "";
+  const en=searchPriceForVariant(v,"EN");
+  const jp=searchPriceForVariant(v,"JP");
+  const lines=[];
+  if(en)lines.push(`<div class="cm-result-line"><span>EN · ${esc(en.metric)}</span><b>${money.format(en.price)}</b></div>`);
+  if(jp)lines.push(`<div class="cm-result-line"><span>JP · ${esc(jp.metric)}</span><b>${money.format(jp.price)}</b></div>`);
+  return lines.length?`<div class="cm-result-price">${lines.join("")}</div>`:"";
+}
+function seriesSearchPriceBox(v){
+  if(!(cmProducts&&cmPrices))return "";
+  if(v.special)return searchPriceBox({...v,exact:v.base+(v.index>0?` · P${v.index}`:"")});
+  const allowed=SERIES_VARIANT_RULES[v.seriesContext||$("seriesSelect").value]?.[v.base]||[0];
+  if(allowed.length>1)return `<div class="cm-result-price cm-result-hint">Prix disponibles après « Voir les ${allowed.length} versions »</div>`;
+  return searchPriceBox({...v,exact:v.base,version:"Standard"});
+}
+function matchCM(c){
+ if(!cmProducts||!cmPrices)return null;
+ const code=cardBaseCode(c),rel=releaseCode(c),eid=cardmarketExpansionId(c);
+ if(!code||!eid)return null;
+
+ const candidates=cmRows(cmProducts,"products")
+   .filter(p=>Number(p.idExpansion)===eid && productCode(p.name)===code)
+   .sort((a,b)=>Number(a.idProduct)-Number(b.idProduct));
+
+ if(!candidates.length)return null;
+
+ // If the card code belongs to the selected expansion, variant index follows
+ // Cardmarket product order: Standard=0, Alt Art=1, Super Alt Art=2.
+ // For a reprint from an older code, the selected expansion normally contains
+ // only the reprint product, so choose the sole/first product there.
+ const native=code.startsWith(rel+"-");
+ let pos=native?selectedVariantIndex(c):0;
+ if(pos>=candidates.length)pos=candidates.length-1;
+ const product=candidates[pos];
+
+ const pmap=matchCM._pmap||(matchCM._pmap=new Map(cmRows(cmPrices,"priceGuides").map(x=>[Number(x.idProduct),x])));
+ const row=pmap.get(Number(product.idProduct));
+ const metric=priceMetric(row);
+ if(!metric)return null;
+ return {product,row,metric,candidateCount:candidates.length,pos,language:cmLanguageCode(c)};
+}
+
+function applyCMToCard(c){
+ if(!cmProducts||!cmPrices)return false;
+ matchCM._pmap=null;
+ const m=matchCM(c);
+ if(!m)return false;
+ c.marketPrice=m.metric.value;
+ c.cardmarketProductId=m.product.idProduct;
+ c.cardmarketProductName=m.product.name;
+ c.cardmarketExpansionId=m.product.idExpansion;
+ c.cardmarketMetric=m.metric.key;
+ c.cardmarketLanguage=m.language;
+ c.priceSource="Cardmarket";
+ c.priceUpdatedAt=new Date().toISOString();
+ return true;
+}
+function applyCM(){
+ matchCM._pmap=null;
+ let ok=0,miss=0,errors=[];
+ for(const c of cards){
+   const m=matchCM(c);
+   if(m){
+     c.marketPrice=m.metric.value;
+     c.cardmarketProductId=m.product.idProduct;
+     c.cardmarketProductName=m.product.name;
+     c.cardmarketExpansionId=m.product.idExpansion;
+     c.cardmarketMetric=m.metric.key;
+     c.cardmarketLanguage=m.language;
+     c.priceSource="Cardmarket";
+     c.priceUpdatedAt=new Date().toISOString();
+     ok++;
+   }else{
+     miss++;
+     if(errors.length<5)errors.push(`${cardBaseCode(c)||c.reference||c.name} : ${explainNoMatch(c)}`);
+   }
+ }
+ localStorage.setItem(KEY,JSON.stringify(cards));
+ renderCollection();
+ cmStatus(`Terminé : ${ok} carte(s) valorisée(s), ${miss} non reconnue(s).\nPrix utilisé : Trend, sinon moyenne 7j / 30j / moyenne / prix bas.${errors.length?`\n\nNon reconnues :\n${errors.join("\n")}`:""}`);
+}
+
+function reloadCardmarketPrices(){
+ if(!(cmProducts&&cmPrices)){
+   cmStatus("Importe d'abord le Product Catalogue et le Price Guide.");
+   updateReloadButton();
+   return;
+ }
+ cmStatus("Rechargement des prix Cardmarket sur toute la collection…");
+ applyCM();
+}
+function importCMFile(file,kind){
+ if(!file)return;
+ const rd=new FileReader();
+ rd.onload=()=>{
+   try{
+     const data=JSON.parse(rd.result);
+     if(kind==="products"){
+       if(!Array.isArray(data.products))throw new Error("clé products absente");
+       cmProducts=data;updateReloadButton();cmStatus(`Catalogue chargé : ${data.products.length} produits. Importe maintenant le Price Guide.`);
+     }else{
+       if(!Array.isArray(data.priceGuides))throw new Error("clé priceGuides absente");
+       cmPrices=data;updateReloadButton();cmStatus(`Price Guide chargé : ${data.priceGuides.length} prix.`);
+     }
+     if(cmProducts&&cmPrices)applyCM();
+   }catch(e){cmStatus("Erreur d'import : "+e.message)}
+ };
+ rd.readAsText(file);
+}
+
+window.importCMFile=importCMFile;
+window.reloadCardmarketPrices=reloadCardmarketPrices;
+window.updateReloadButton=updateReloadButton;
+
+function collectionSeriesCode(c){
+  const release=String(c.releaseSet||c.cardSet||"").toUpperCase();
+  let m=release.match(/FB\d{2}/);
+  if(m)return m[0];
+  const base=String(c.baseCode||c.reference||"").toUpperCase();
+  m=base.match(/FB\d{2}/);
+  return m?m[0]:"AUTRES";
+}
+function collectionCardNumber(c){
+  const ref=String(c.baseCode||c.reference||"").toUpperCase();
+  const m=ref.match(/(?:FB|FS)\d{2}-(\d{1,3})/);
+  return m?Number(m[1]):9999;
+}
+function isCollectionReprint(c,series){
+  const base=String(c.baseCode||c.reference||"").toUpperCase();
+  return series!=="AUTRES" && !base.startsWith(series+"-");
+}
+function collectionVariantKey(c){
+  return [
+    String(c.baseCode||c.reference||"").toUpperCase(),
+    String(c.releaseSet||"").toUpperCase(),
+    String(c.version||"").toUpperCase()
+  ].join("|");
+}
+function seriesOwnedCount(series,items){
+  // "cartes présentes" = variantes distinctes présentes dans la collection,
+  // pas la quantité physique en double.
+  return new Set(items.map(collectionVariantKey)).size;
+}
+function seriesTotalCount(series){
+  return PRODUCT_TOTALS?.[series]||PRODUCT_REFERENCE_TOTALS?.[series]||null;
+}
+function sortCollectionItems(a,b,series){
+  const ar=isCollectionReprint(a,series), br=isCollectionReprint(b,series);
+  if(ar!==br)return ar?1:-1;
+  const an=collectionCardNumber(a), bn=collectionCardNumber(b);
+  if(an!==bn)return an-bn;
+  const av=String(a.version||""), bv=String(b.version||"");
+  if(av!==bv)return av.localeCompare(bv,"fr");
+  return String(a.language||"EN").localeCompare(String(b.language||"EN"),"fr");
+}
+function makeCollectionCardElement(c){
+  let unit=+c.marketPrice||0,qty=+c.quantity||1,v=unit*qty,cost=(+c.buyPrice||0)*qty,gain=v-cost,e=document.createElement("article");
+  e.className="ccard";
+  e.innerHTML=`${c.imageUrl?`<img src="${c.imageUrl}">`:""}<div class="cb"><small>${esc(c.reference)} <span class="lang-badge">${esc(c.language||"EN")}</span></small><h3>${esc(c.name)}</h3><p>${esc(c.version)} · ${esc(c.rarity)}<br><span class="source">${esc(c.releaseSet||"")}</span></p><div class="market-line"><small>Prix unitaire</small><br><b>${money.format(unit)}</b><br><small>Qté ${qty} · Valeur ${money.format(v)} · <span class="gain">${money.format(gain)}</span></small>${c.priceSource==="Cardmarket"?`<div class="price-source">Cardmarket · ${esc(c.cardmarketMetric||"")} · ${esc(c.cardmarketLanguage||c.language||"EN")}${(c.cardmarketLanguage||c.language)==="JP"?" (édition JP)":""} · idProduct ${esc(c.cardmarketProductId||"")}</div>`:""}</div><div class="edit-actions"><button class="editbtn">Modifier prix / carte</button><button class="del">Supprimer</button></div></div>`;
+  e.querySelector(".editbtn").onclick=()=>editCard(c.id);
+  e.querySelector(".del").onclick=()=>{cards=cards.filter(x=>x.id!==c.id);localStorage.setItem(KEY,JSON.stringify(cards));renderCollection()};
+  return e;
+}
+
+
+function backupStatus(t){
+  const e=document.getElementById("backupStatus");
+  if(e)e.textContent=t;
+}
+function exportBackup(){
+  const payload={
+    app:"DB Collection",
+    version:"5.2.2",
+    exportedAt:new Date().toISOString(),
+    cards:cards,
+    spends:spends
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  const d=new Date();
+  const stamp=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  a.href=url;
+  a.download=`DB_Collection_Sauvegarde_${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  backupStatus(`Sauvegarde exportée : ${cards.length} entrée(s) de collection et ${spends.length} dépense(s).`);
+}
+function importBackupFile(file){
+  if(!file)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const data=JSON.parse(rd.result);
+      if(!data || !Array.isArray(data.cards) || !Array.isArray(data.spends)){
+        throw new Error("format de sauvegarde DB Collection non reconnu");
+      }
+      const ok=confirm(`Importer cette sauvegarde ?\n\n${data.cards.length} entrée(s) de collection\n${data.spends.length} dépense(s)\n\nLa collection actuellement enregistrée sur cet ordinateur sera remplacée.`);
+      if(!ok){
+        backupStatus("Import annulé.");
+        return;
+      }
+      cards=data.cards;
+      spends=data.spends;
+      localStorage.setItem(KEY,JSON.stringify(cards));
+      localStorage.setItem(SPEND_KEY,JSON.stringify(spends));
+      try{renderCollection()}catch(err){console.error("Rendu collection après import :",err)}
+      try{renderSpends()}catch(err){console.error("Rendu dépenses après import :",err)}
+      try{updateFinancialSummary()}catch(err){console.error("Résumé financier après import :",err)}
+      backupStatus(`Sauvegarde restaurée avec succès : ${cards.length} entrée(s), ${spends.length} dépense(s).`);
+      alert(`Sauvegarde importée : ${cards.length} entrée(s) de collection et ${spends.length} dépense(s).`);
+    }catch(e){
+      backupStatus("Impossible d'importer cette sauvegarde : "+e.message);
+    }finally{
+      const inp=document.getElementById("importBackup");
+      if(inp)inp.value="";
+    }
+  };
+  rd.readAsText(file);
+}
+function renderSpends(){
+  const list=document.getElementById("spendList");
+  if(!list)return;
+  list.innerHTML="";
+  spends.slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).forEach(s=>{
+    const row=document.createElement("div");
+    row.className="spend-row";
+    row.innerHTML=`<div class="meta"><strong>${esc(s.label||"Dépense")}</strong><small>${new Date(s.date).toLocaleDateString("fr-FR")}</small></div><div><b>${money.format(+s.amount||0)}</b> <button type="button">Supprimer</button></div>`;
+    row.querySelector("button").onclick=()=>{
+      spends=spends.filter(x=>x.id!==s.id);
+      localStorage.setItem(SPEND_KEY,JSON.stringify(spends));
+      renderSpends();
+      updateFinancialSummary();
+    };
+    list.appendChild(row);
+  });
+}
+function updateFinancialSummary(){
+  const extra=spends.reduce((s,x)=>s+(+x.amount||0),0);
+  const cardCost=cards.reduce((s,c)=>s+(+c.buyPrice||0)*(+c.quantity||1),0);
+  const value=cards.reduce((s,c)=>s+(+c.marketPrice||0)*(+c.quantity||1),0);
+  const totalSpend=extra+cardCost;
+  const pnl=value-totalSpend;
+  const roi=totalSpend>0?(pnl/totalSpend)*100:0;
+  const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val};
+  set("extraSpendTotal",money.format(extra));
+  set("allSpendTotal",money.format(totalSpend));
+  set("spendCollectionValue",money.format(value));
+  set("realPnL",money.format(pnl));
+  set("roiPct",`${roi.toFixed(1).replace(".",",")} %`);
+}
+function addSpend(){
+  const label=document.getElementById("spendLabel")?.value.trim();
+  const amount=Number(document.getElementById("spendAmount")?.value);
+  if(!label||!Number.isFinite(amount)||amount<=0)return;
+  spends.unshift({id:crypto.randomUUID(),label,amount,date:new Date().toISOString()});
+  localStorage.setItem(SPEND_KEY,JSON.stringify(spends));
+  document.getElementById("spendLabel").value="";
+  document.getElementById("spendAmount").value="";
+  renderSpends();
+  updateFinancialSummary();
+}
+
+function checklistIdentity(v){
+  return [
+    String(v.baseCode||v.base||v.reference||"").toUpperCase(),
+    String(v.releaseSet||"").toUpperCase(),
+    String(v.version||"Standard").toUpperCase()
+  ].join("|");
+}
+async function getChecklistVariants(series){
+  const d=await loadCatalog();
+  const uniq=new Map();
+  d.filter(c=>base(val(c,"card_number","cardNumber","number","id")).startsWith(series+"-"))
+   .forEach(c=>uniq.set(base(val(c,"card_number","cardNumber","number","id")),c));
+
+  const all=[];
+  for(const c of uniq.values()){
+    const x=record(c);
+    const allowed=SERIES_VARIANT_RULES[series]?.[x.base] || [0];
+    for(const vi of allowed){
+      const info=meta(x.base,vi);
+      const leader=/leader/i.test(x.type||"") || String(x.rarity||"").replace(/★/g,"").trim()==="L";
+      const image=vi===0
+        ? seriesThumbnail({...x,raw:c,index:0,seriesContext:series})
+        : `https://www.dbs-cardgame.com/fw/images/cards/card/en/${x.base}${leader?"_f":""}_p${vi}.webp`;
+      all.push({...x,exact:x.base+(vi?` · P${vi}`:""),index:vi,version:info.version,releaseSet:info.releaseSet,image,special:false});
+    }
+  }
+
+  for(const sp of (SERIES_SPECIALS[series]||[])){
+    const c=d.find(x=>base(val(x,"card_number","cardNumber","number","id"))===sp.base);
+    if(!c)continue;
+    const x=record(c);
+    const suffix=sp.imageSuffix!==undefined?sp.imageSuffix:(sp.wantedIndex>0?`_p${sp.wantedIndex}`:"");
+    all.push({...x,exact:x.base+(sp.wantedIndex>0?` · P${sp.wantedIndex}`:""),index:sp.wantedIndex,version:sp.version,releaseSet:sp.releaseSet,image:`https://www.dbs-cardgame.com/fw/images/cards/card/en/${sp.base}${suffix}.webp`,special:true});
+  }
+
+  return all.sort((a,b)=>{
+    if(!!a.special!==!!b.special)return a.special?1:-1;
+    if(a.number!==b.number)return a.number-b.number;
+    return (a.index||0)-(b.index||0);
+  });
+}
+async function fillUnifiedSeriesGrid(series,grid,ownedItems){
+  if(grid.dataset.fullLoaded==="1")return;
+  grid.dataset.fullLoaded="1";
+
+  const originalHtml=grid.innerHTML;
+  grid.innerHTML='<div class="unified-loading">Chargement de l’extension…</div>';
+
+  try{
+    const all=await getChecklistVariants(series);
+    const ownedByKey=new Map();
+
+    for(const c of ownedItems){
+      const k=checklistIdentity(c);
+      if(!ownedByKey.has(k))ownedByKey.set(k,[]);
+      ownedByKey.get(k).push(c);
+    }
+
+    grid.innerHTML="";
+
+    for(const v of all){
+      const owned=ownedByKey.get(checklistIdentity(v));
+      if(owned?.length){
+        for(const c of owned){
+          grid.appendChild(makeCollectionCardElement(c));
+        }
+      }else{
+        const card=document.createElement("article");
+        card.className="ccard collection-missing";
+        card.innerHTML=`<img src="${v.image}" onerror="this.style.visibility='hidden'"><div class="cb"><small>${esc(v.exact||v.base)}</small><h3>${esc(v.name)}</h3><p>${esc(v.version)} · ${esc(v.rarity)}<br><span class="source">${esc(v.releaseSet||"")}</span></p><span class="missing-label">Non possédée</span><button type="button" class="add-missing-card">Ajouter à ma collection</button></div>`;
+        card.querySelector(".add-missing-card").onclick=()=>{
+          choose(v);
+        };
+        grid.appendChild(card);
+      }
+    }
+  }catch(e){
+    console.error(e);
+    grid.innerHTML=originalHtml;
+  }
+}
+
+function renderCollection(){
+  let q=$("filter").value.toLowerCase(),g=$("collection");
+  g.innerHTML="";
+  let list=cards.filter(c=>JSON.stringify(c).toLowerCase().includes(q));
+
+  const groups=new Map();
+  for(const c of list){
+    const s=collectionSeriesCode(c);
+    if(!groups.has(s))groups.set(s,[]);
+    groups.get(s).push(c);
+  }
+
+  const order=[...groups.keys()].sort((a,b)=>{
+    if(a==="AUTRES")return 1;
+    if(b==="AUTRES")return -1;
+    return a.localeCompare(b,"fr",{numeric:true});
+  });
+
+  for(const series of order){
+    const items=groups.get(series).slice().sort((a,b)=>sortCollectionItems(a,b,series));
+    const wrap=document.createElement("section");
+    wrap.className="collection-series";
+
+    const head=document.createElement("div");
+    head.className="collection-series-head";
+    const owned=seriesOwnedCount(series,items);
+    const total=seriesTotalCount(series);
+    head.innerHTML=`<h3>${esc(series==="AUTRES"?"Autres / Starter Decks":series)}</h3><div class="progress">${total?`${owned} / ${total} cartes`:`${owned} carte${owned>1?"s":""}`}</div><div class="collection-series-toggle">Afficher ▾</div>`;
+    wrap.classList.add("collapsed");
+    head.onclick=()=>{
+      const wasCollapsed=wrap.classList.contains("collapsed");
+
+      // Ferme toutes les autres extensions ouvertes.
+      g.querySelectorAll(".collection-series").forEach(section=>{
+        if(section!==wrap){
+          section.classList.add("collapsed");
+          const otherToggle=section.querySelector(".collection-series-toggle");
+          if(otherToggle)otherToggle.textContent="Afficher ▾";
+        }
+      });
+
+      // Ouvre/ferme l'extension cliquée.
+      if(wasCollapsed){
+        wrap.classList.remove("collapsed");
+        const t=head.querySelector(".collection-series-toggle");
+        if(t)t.textContent="Masquer ▴";
+        if(/^FB\d{2}$/.test(series)) fillUnifiedSeriesGrid(series,grid,items);
+      }else{
+        wrap.classList.add("collapsed");
+        const t=head.querySelector(".collection-series-toggle");
+        if(t)t.textContent="Afficher ▾";
+      }
+    };
+    wrap.appendChild(head);
+
+    const grid=document.createElement("div");
+    grid.className="collection-series-grid";
+    for(const c of items)grid.appendChild(makeCollectionCardElement(c));
+    wrap.appendChild(grid);
+
+    g.appendChild(wrap);
+  }
+
+  $("empty").style.display=list.length?"none":"block";
+  let tv=cards.reduce((s,c)=>s+(+c.marketPrice||0)*(+c.quantity||1),0),
+      tc=cards.reduce((s,c)=>s+(+c.buyPrice||0)*(+c.quantity||1),0);
+  $("tv").textContent=money.format(tv);
+  $("tc").textContent=money.format(tc);
+  $("tg").textContent=money.format(tv-tc);
+  $("tq").textContent=cards.reduce((s,c)=>s+(+c.quantity||1),0);
+  const tq=$("tq");
+  if(tq)tq.title=[...new Set(cards.map(c=>c.language||"EN"))].map(lang=>{
+    const n=cards.filter(c=>(c.language||"EN")===lang).reduce((s,c)=>s+(+c.quantity||1),0);
+    return `${lang}: ${n}`;
+  }).join(" · ");
+  updateFinancialSummary();
+}
+function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+if($("filter"))$("filter").oninput=()=>{try{renderCollection()}catch(e){console.error(e)}};
+try{renderCollection()}catch(e){console.error("Initialisation inventaire :",e)}
+
+
+
+
+updateReloadButton();
+
+document.getElementById("addSpend")?.addEventListener("click",addSpend);
+document.getElementById("spendAmount")?.addEventListener("keydown",e=>{if(e.key==="Enter")addSpend()});
+renderSpends();
+updateFinancialSummary();
+
+document.getElementById("exportBackup")?.addEventListener("click",exportBackup);
+
+
+
+
+
+
+
+
+document.getElementById("language")?.addEventListener("change",()=>{
+  if(!$("baseCode")?.value)return;
+  fillSearchPriceInForm({
+    base:$("baseCode").value,
+    exact:$("exact").value,
+    releaseSet:$("releaseSet").value,
+    cardSet:$("cardSet").value,
+    version:$("version").value
+  });
+});
+</script>
+<script>
+(function(){
+  const BACKUP_CARD_KEY="db_collection_cards_v530";
+  const BACKUP_SPEND_KEY="db_collection_spends_v1";
+
+  function euro(v){
+    try{return Number(v||0).toLocaleString("fr-FR",{style:"currency",currency:"EUR"})}
+    catch(e){return String(v||0)+" €"}
+  }
+  function esc2(s){
+    return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+  }
+  function seriesOf(c){
+    const r=String(c.releaseSet||c.cardSet||c.baseCode||c.reference||"").toUpperCase();
+    const m=r.match(/FB\d{2}/);
+    return m?m[0]:"AUTRES";
+  }
+  function numOf(c){
+    const r=String(c.baseCode||c.reference||"").toUpperCase();
+    const m=r.match(/(?:FB|FS)\d{2}-(\d{1,3})/);
+    return m?Number(m[1]):9999;
+  }
+  function isReprint(c,series){
+    const base=String(c.baseCode||c.reference||"").toUpperCase();
+    return series!=="AUTRES"&&!base.startsWith(series+"-");
+  }
+
+  function autonomousRender(cards,spends){
+    const collection=document.getElementById("collection");
+    const empty=document.getElementById("empty");
+    if(!collection)throw new Error("zone Inventaire introuvable");
+    collection.innerHTML="";
+
+    const groups={};
+    cards.forEach(c=>{
+      const s=seriesOf(c);
+      (groups[s]||(groups[s]=[])).push(c);
+    });
+
+    Object.keys(groups).sort((a,b)=>{
+      if(a==="AUTRES")return 1;
+      if(b==="AUTRES")return -1;
+      return a.localeCompare(b,"fr",{numeric:true});
+    }).forEach(series=>{
+      const wrap=document.createElement("section");
+      wrap.className="collection-series collapsed";
+
+      const unique=new Set(groups[series].map(c=>[
+        c.baseCode||c.reference||"",
+        c.releaseSet||"",
+        c.version||""
+      ].join("|").toUpperCase())).size;
+
+      const totals={FB01:163,FB02:163,FB03:163,FB04:158,FB05:154,FB06:143,FB07:158,FB08:158,FB09:164,FB10:162};
+      const head=document.createElement("div");
+      head.className="collection-series-head";
+      head.innerHTML='<h3>'+esc2(series==="AUTRES"?"Autres / Starter Decks":series)+'</h3>'+
+        '<div class="progress">'+(totals[series]?(unique+" / "+totals[series]+" cartes"):(unique+" cartes"))+'</div>'+
+        '<div class="collection-series-toggle">Afficher ▾</div>';
+
+      const grid=document.createElement("div");
+      grid.className="collection-series-grid";
+
+      groups[series].slice().sort((a,b)=>{
+        const ar=isReprint(a,series),br=isReprint(b,series);
+        if(ar!==br)return ar?1:-1;
+        return numOf(a)-numOf(b);
+      }).forEach(c=>{
+        const qty=Number(c.quantity||1), unit=Number(c.marketPrice||0), val=qty*unit;
+        const art=document.createElement("article");
+        art.className="ccard";
+        art.innerHTML=(c.imageUrl?'<img src="'+esc2(c.imageUrl)+'">':'')+
+          '<div class="cb"><small>'+esc2(c.reference||c.baseCode||"")+
+          ' <span class="lang-badge">'+esc2(c.language||"EN")+'</span></small>'+
+          '<h3>'+esc2(c.name||"")+'</h3>'+
+          '<p>'+esc2(c.version||"")+' · '+esc2(c.rarity||"")+
+          '<br><span class="source">'+esc2(c.releaseSet||"")+'</span></p>'+
+          '<div class="market-line"><small>Prix unitaire</small><br><b>'+euro(unit)+'</b>'+
+          '<br><small>Qté '+qty+' · Valeur '+euro(val)+'</small></div></div>';
+        grid.appendChild(art);
+      });
+
+      head.onclick=()=>{
+        document.querySelectorAll(".collection-series").forEach(s=>{
+          if(s!==wrap){
+            s.classList.add("collapsed");
+            const t=s.querySelector(".collection-series-toggle");
+            if(t)t.textContent="Afficher ▾";
+          }
+        });
+        const opening=wrap.classList.contains("collapsed");
+        wrap.classList.toggle("collapsed");
+        const t=head.querySelector(".collection-series-toggle");
+        if(t)t.textContent=opening?"Masquer ▴":"Afficher ▾";
+      };
+
+      wrap.appendChild(head);
+      wrap.appendChild(grid);
+      collection.appendChild(wrap);
+    });
+
+    if(empty)empty.style.display=cards.length?"none":"block";
+
+    const totalVal=cards.reduce((s,c)=>s+(Number(c.marketPrice||0)*Number(c.quantity||1)),0);
+    const totalCost=cards.reduce((s,c)=>s+(Number(c.buyPrice||0)*Number(c.quantity||1)),0);
+    const tq=cards.reduce((s,c)=>s+Number(c.quantity||1),0);
+    const extra=spends.reduce((s,x)=>s+Number(x.amount||0),0);
+
+    const set=(id,text)=>{const e=document.getElementById(id);if(e)e.textContent=text};
+    set("tv",euro(totalVal));
+    set("tc",euro(totalCost));
+    set("tg",euro(totalVal-totalCost));
+    set("tq",String(tq));
+    set("extraSpendTotal",euro(extra));
+    set("allSpendTotal",euro(extra+totalCost));
+    set("spendCollectionValue",euro(totalVal));
+    set("realPnL",euro(totalVal-extra-totalCost));
+    set("roiPct",(extra+totalCost)>0?(((totalVal-extra-totalCost)/(extra+totalCost))*100).toFixed(1).replace(".",",")+" %":"0 %");
+
+    const invBody=document.getElementById("inventoryBody");
+    if(invBody)invBody.classList.remove("hide");
+    const invToggle=document.getElementById("inventoryToggle");
+    if(invToggle){
+      const l=invToggle.querySelector(".module-toggle-label");
+      if(l)l.textContent="Masquer ▴";
+    }
+  }
+
+  window.importDBBackupDirect=function(file,input){
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=function(){
+      try{
+        const data=JSON.parse(String(reader.result||""));
+        if(!data||!Array.isArray(data.cards))throw new Error("liste cards absente");
+        const cards=data.cards;
+        const spends=Array.isArray(data.spends)?data.spends:[];
+
+        if(!window.confirm("Importer cette sauvegarde ?\n\n"+cards.length+" entrée(s)\n"+spends.length+" dépense(s)")){
+          if(input)input.value="";
+          return;
+        }
+
+        // Render first: this is the important part and is independent from app.js/localStorage.
+        autonomousRender(cards,spends);
+
+        // Then persist as best effort.
+        try{localStorage.setItem(BACKUP_CARD_KEY,JSON.stringify(cards))}catch(e){}
+        try{localStorage.setItem(BACKUP_SPEND_KEY,JSON.stringify(spends))}catch(e){}
+
+        window.__importedBackup={cards,spends};
+        window.alert("Import réussi : "+cards.length+" entrée(s) et "+spends.length+" dépense(s).\nLa collection est affichée directement dans Inventaire.");
+        if(input)input.value="";
+      }catch(err){
+        window.alert("Import impossible : "+(err&&err.message?err.message:String(err)));
+        if(input)input.value="";
+      }
+    };
+    reader.onerror=function(){
+      window.alert("Impossible de lire le fichier.");
+      if(input)input.value="";
+    };
+    reader.readAsText(file);
+  };
+})();
+</script>
+
+</body></html>
